@@ -1,0 +1,6 @@
+{
+  "name": "Sala de Crise - Lençóis Paulista",
+  "description": "Painel operacional da Sala de Crise de Lençóis Paulista para telemetria do Rio Lençóis, gestão de vias críticas, sirene de evacuação com trava dupla e auditoria.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,2309 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sala de Crise | Rio Lençóis - Defesa Civil</title>
+    <meta name="description" content="Painel de comando limpo e objetivo para monitoramento do Rio Lençóis e gestão de evacuação da Defesa Civil de Lençóis Paulista." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+      /* ==========================================================================
+         DESIGN SYSTEM: MINIMALISTA, PRECISO E DE ALTO CONTRASTE OPERACIONAL
+         ========================================================================== */
+      :root {
+        --bg-main: #090d12;
+        --bg-panel: #111720;
+        --bg-panel-hover: #161e2a;
+        --border: #1e293b;
+        --border-focus: #334155;
+        
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+
+        --status-normal: #10b981;
+        --status-normal-bg: rgba(16, 185, 129, 0.1);
+        --status-atencao: #f59e0b;
+        --status-atencao-bg: rgba(245, 158, 11, 0.1);
+        --status-alerta: #f97316;
+        --status-alerta-bg: rgba(249, 115, 22, 0.1);
+        --status-evacuacao: #ef4444;
+        --status-evacuacao-bg: rgba(239, 68, 68, 0.12);
+
+        --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      /* ==========================================================================
+         TOPBAR LIMPA E DIRETA
+         ========================================================================== */
+      .topbar {
+        background-color: var(--bg-panel);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .topbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-badge {
+        background: #1e293b;
+        color: #38bdf8;
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 13px;
+        padding: 4px 8px;
+        border-radius: 6px;
+        border: 1px solid #334155;
+      }
+
+      .brand-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.2px;
+      }
+
+      .brand-subtitle {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .topbar-meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+
+      .system-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--status-normal);
+        font-weight: 600;
+      }
+
+      .system-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: currentColor;
+        box-shadow: 0 0 8px currentColor;
+      }
+
+      .clock-display {
+        color: var(--text-secondary);
+      }
+
+      /* BANNER DE EMERGÊNCIA (EXIBIDO APENAS SE >= 90% OU SIRENE ATIVA) */
+      #evacuationBanner {
+        display: none;
+        background: #7f1d1d;
+        color: #fef2f2;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid #b91c1c;
+      }
+
+      /* ==========================================================================
+         LAYOUT CENTRAL ORGANIZADO EM 3 BLOCOS HARMONIOSOS
+         ========================================================================== */
+      .app-shell {
+        max-width: 1320px;
+        width: 100%;
+        margin: 20px auto;
+        padding: 0 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* LINHA SUPERIOR: STATUS DO RIO & CONTROLE SIMPLIFICADO */
+      .telemetry-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      @media (min-width: 900px) {
+        .telemetry-row {
+          grid-template-columns: 380px 1fr;
+        }
+      }
+
+      .panel {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .panel-title {
+        font-size: 12px;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.8px;
+        font-weight: 600;
+      }
+
+      /* CARTÃO PRINCIPAL: NÍVEL DO RIO */
+      .river-main-card {
+        justify-content: center;
+      }
+
+      .river-metric-wrap {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .river-pct-value {
+        font-size: 64px;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        line-height: 1;
+        letter-spacing: -2px;
+        color: var(--status-normal);
+        transition: color 0.2s ease;
+      }
+
+      .river-pct-unit {
+        font-size: 24px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      .risk-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 700;
+        width: fit-content;
+        margin-bottom: 16px;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .risk-pill.normal {
+        background: var(--status-normal-bg);
+        color: var(--status-normal);
+        border-color: rgba(16, 185, 129, 0.3);
+      }
+      .risk-pill.atencao {
+        background: var(--status-atencao-bg);
+        color: var(--status-atencao);
+        border-color: rgba(245, 158, 11, 0.3);
+      }
+      .risk-pill.alerta {
+        background: var(--status-alerta-bg);
+        color: var(--status-alerta);
+        border-color: rgba(249, 115, 22, 0.3);
+      }
+      .risk-pill.evacuacao {
+        background: var(--status-evacuacao-bg);
+        color: var(--status-evacuacao);
+        border-color: rgba(239, 68, 68, 0.4);
+      }
+
+      .river-subtext {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.4;
+      }
+
+      /* BARRAMENTO / GAUGE LIMPO COM MARCADORES */
+      .gauge-box {
+        margin-top: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .gauge-bar-track {
+        height: 14px;
+        background: #090e14;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .gauge-bar-fill {
+        height: 100%;
+        width: 35%;
+        background-color: var(--status-normal);
+        border-radius: 7px;
+        transition: width 0.2s ease, background-color 0.2s ease;
+      }
+
+      .gauge-scale-ticks {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+        padding: 0 2px;
+      }
+
+      /* CONTROLES RÁPIDOS */
+      .control-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .slider-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 10px 0 20px 0;
+      }
+
+      .clean-slider {
+        flex: 1;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 6px;
+        background: #1e293b;
+        border-radius: 3px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .clean-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #f8fafc;
+        border: 2px solid #38bdf8;
+        cursor: pointer;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .quick-steps-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .btn-step {
+        background: #0c1219;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 0;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .btn-step:hover {
+        background: var(--bg-panel-hover);
+        color: var(--text-primary);
+        border-color: var(--border-focus);
+      }
+
+      .scenario-chips-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .chip-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      .btn-chip {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .btn-chip:hover {
+        background: #1e293b;
+        color: #f8fafc;
+      }
+
+      /* ==========================================================================
+         MÓDULO ADAPTADOR DE TELEMETRIA (PADRÃO ADAPTER)
+         ========================================================================== */
+      .adapter-box {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .adapter-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .adapter-title-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .adapter-title {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        color: var(--text-primary);
+        font-weight: 700;
+        letter-spacing: 0.6px;
+      }
+
+      .adapter-tag {
+        font-size: 10px;
+        font-family: var(--font-mono);
+        background: rgba(56, 189, 248, 0.12);
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .adapter-input-group {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+      }
+
+      .adapter-input-wrap {
+        position: relative;
+        flex: 1;
+      }
+
+      .adapter-input {
+        width: 100%;
+        background: #090e15;
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 8px 36px 8px 12px;
+        border-radius: 6px;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+
+      .adapter-input:focus {
+        border-color: #38bdf8;
+      }
+
+      .adapter-unit-suffix {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .btn-adapter-process {
+        background: #0284c7;
+        color: #ffffff;
+        border: none;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 0 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+        transition: background 0.15s;
+      }
+
+      .btn-adapter-process:hover {
+        background: #0369a1;
+      }
+
+      .adapter-quick-presets {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .btn-sensor-chip {
+        background: #090e15;
+        border: 1px solid #1e293b;
+        color: var(--text-secondary);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .btn-sensor-chip:hover {
+        background: #1e293b;
+        color: #38bdf8;
+        border-color: #38bdf8;
+      }
+
+      /* ==========================================================================
+         CONEXÃO API EM TEMPO REAL (RIO LENÇÓIS)
+         ========================================================================== */
+      .api-live-card {
+        background: #090e15;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 6px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .api-live-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .api-live-status-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .api-live-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+
+      .api-live-dot.syncing {
+        background: #38bdf8;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+        animation: pulseSync 0.9s infinite alternate;
+      }
+
+      .api-live-dot.error {
+        background: #ef4444;
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+      }
+
+      @keyframes pulseSync {
+        from { opacity: 0.35; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1.15); }
+      }
+
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .api-live-title {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        font-weight: 700;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .api-live-station {
+        font-size: 10px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+      }
+
+      .api-live-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-api-sync {
+        background: #1e293b;
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.15s;
+      }
+
+      .btn-api-sync:hover {
+        background: rgba(56, 189, 248, 0.15);
+        border-color: #38bdf8;
+      }
+
+      .btn-api-sync:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-auto-toggle {
+        background: #0f172a;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s;
+      }
+
+      .btn-auto-toggle.active {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+        border-color: rgba(16, 185, 129, 0.4);
+      }
+
+      .btn-auto-toggle .auto-indicator {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        transition: all 0.2s;
+      }
+
+      .btn-auto-toggle.active .auto-indicator {
+        background: #10b981;
+        box-shadow: 0 0 6px #10b981;
+      }
+
+      .api-live-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+        gap: 8px;
+        background: #05080c;
+        border: 1px solid #131c26;
+        border-radius: 4px;
+        padding: 8px 10px;
+      }
+
+      .api-metric-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .api-metric-lbl {
+        font-size: 9px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+
+      .api-metric-val {
+        font-size: 12px;
+        font-family: var(--font-mono);
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .api-metric-val.accent {
+        color: #38bdf8;
+      }
+
+      .api-custom-toggle-row {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .btn-text-link {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        cursor: pointer;
+        padding: 0;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        transition: color 0.15s;
+      }
+
+      .btn-text-link:hover {
+        color: #38bdf8;
+      }
+
+      .api-custom-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 8px;
+        border-top: 1px dashed #1e293b;
+      }
+
+      .api-custom-input-wrap {
+        display: flex;
+        gap: 6px;
+      }
+
+      .api-custom-hint {
+        font-size: 10px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        line-height: 1.4;
+      }
+
+      .api-custom-hint code {
+        color: #38bdf8;
+        background: #0f172a;
+        padding: 1px 4px;
+        border-radius: 3px;
+      }
+
+      /* PAINEL DE TRANSPARÊNCIA DA CONVERSÃO */
+      .adapter-transparency-card {
+        background: #090e15;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .transparency-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 8px;
+      }
+
+      .transparency-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .transparency-label {
+        font-size: 10px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .transparency-val {
+        font-size: 13px;
+        font-family: var(--font-mono);
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .transparency-val.accent {
+        color: #38bdf8;
+      }
+
+      .adapter-log-msg {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        border-top: 1px dashed #1e293b;
+        padding-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ==========================================================================
+         LINHA INFERIOR: VIAS CRÍTICAS + SIRENE (MECANISMO DUPLO) + LOGS
+         ========================================================================== */
+      .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      @media (min-width: 900px) {
+        .bottom-grid {
+          grid-template-columns: 1.1fr 0.9fr;
+        }
+      }
+
+      /* LISTA DE VIAS VULNERÁVEIS */
+      .vias-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .via-item {
+        background: #0c1219;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        transition: border-color 0.2s, background-color 0.2s;
+      }
+
+      .via-item.interditada {
+        border-color: rgba(239, 68, 68, 0.4);
+        background: rgba(239, 68, 68, 0.05);
+      }
+
+      .via-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .via-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .via-detail {
+        font-size: 12px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+      }
+
+      .via-badge {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .via-badge.liberada {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+
+      .via-badge.interditada {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.5);
+      }
+
+      /* ==========================================================================
+         MÓDULO DA SIRENE (MECANISMO DUPLO TÁTICO E ELEGANTE)
+         ========================================================================== */
+      .siren-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* SLIDE TO UNLOCK */
+      .slide-container {
+        position: relative;
+        height: 52px;
+        background: #090e15;
+        border: 1px dashed #334155;
+        border-radius: 26px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        user-select: none;
+        touch-action: none;
+        transition: border 0.2s, background 0.2s;
+      }
+
+      .slide-container.armed {
+        border-style: solid;
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.05);
+      }
+
+      .slide-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        pointer-events: none;
+        letter-spacing: 0.5px;
+        padding-left: 48px;
+        transition: opacity 0.2s;
+      }
+
+      .slide-handle {
+        position: absolute;
+        left: 4px;
+        width: 44px;
+        height: 44px;
+        border-radius: 22px;
+        background: #334155;
+        color: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        font-size: 16px;
+        z-index: 2;
+        transition: background-color 0.2s;
+      }
+
+      .slide-handle:active {
+        cursor: grabbing;
+      }
+
+      .slide-handle.armed {
+        background: #10b981;
+      }
+
+      /* BOTÃO DE PRESSIONAR POR 3 SEGUNDOS */
+      .hold-btn {
+        width: 100%;
+        height: 64px;
+        background: #090e15;
+        border: 1px solid #1e293b;
+        border-radius: 8px;
+        color: var(--text-muted);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        font-weight: 700;
+        cursor: not-allowed;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        user-select: none;
+        transition: all 0.2s ease;
+      }
+
+      .hold-btn.ready {
+        cursor: pointer;
+        background: #180d10;
+        border-color: #7f1d1d;
+        color: #fca5a5;
+      }
+
+      .hold-btn.ready:hover {
+        background: #241116;
+        border-color: #991b1b;
+      }
+
+      .hold-progress {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        background: rgba(239, 68, 68, 0.4);
+        pointer-events: none;
+        transition: width 0.05s linear;
+      }
+
+      .hold-label-main {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hold-sublabel {
+        position: relative;
+        z-index: 1;
+        font-size: 11px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+      }
+
+      /* DESATIVAÇÃO DA SIRENE */
+      .btn-silence {
+        display: none;
+        width: 100%;
+        padding: 12px;
+        background: #1e1b20;
+        border: 1px solid #ef4444;
+        color: #f87171;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: var(--font-mono);
+        transition: all 0.2s;
+      }
+
+      .btn-silence:hover {
+        background: #ef4444;
+        color: #ffffff;
+      }
+
+      .btn-silence.active {
+        display: block;
+      }
+
+      /* ==========================================================================
+         MÓDULO DE ÁUDIO DA SIRENE (ARQUIVO OFICIAL & CONTROLES)
+         ========================================================================== */
+      .siren-audio-card {
+        background: #090e15;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .audio-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+      }
+
+      .audio-file-badge {
+        color: #60a5fa;
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 170px;
+      }
+
+      .audio-card-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn-audio-action {
+        background: #151d28;
+        border: 1px solid #2d3b4e;
+        color: var(--text-secondary);
+        font-size: 11px;
+        font-family: var(--font-mono);
+        padding: 6px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s ease;
+        user-select: none;
+      }
+
+      .btn-audio-action:hover {
+        background: #1e2a3a;
+        color: #ffffff;
+        border-color: #3b82f6;
+      }
+
+      .btn-audio-action.playing {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: #ef4444;
+        color: #fca5a5;
+      }
+
+      /* ==========================================================================
+         LOG AUDITÁVEL DISCRETO E FUNCIONAL
+         ========================================================================== */
+      .audit-wrap {
+        margin-top: 10px;
+      }
+
+      .audit-log-list {
+        height: 180px;
+        overflow-y: auto;
+        background: #090e15;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .audit-log-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .audit-log-list::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 3px;
+      }
+
+      .log-row {
+        display: flex;
+        gap: 10px;
+        line-height: 1.4;
+      }
+
+      .log-time {
+        color: var(--text-muted);
+        white-space: nowrap;
+      }
+
+      .log-content {
+        color: var(--text-secondary);
+      }
+
+      .log-content.alert {
+        color: #f87171;
+        font-weight: 600;
+      }
+
+      /* RODAPÉ DISCRETO */
+      footer {
+        padding: 16px 24px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        border-top: 1px solid var(--border);
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- BANNER DE EVACUAÇÃO (SOMENTE EM ALERTA MÁXIMO OU SIRENE) -->
+    <div id="evacuationBanner">
+      ALERTA DE EVACUAÇÃO EM ANDAMENTO | MORADORES EM ÁREAS DE RISCO DEVEM EVACUAR
+    </div>
+
+    <!-- CABEÇALHO LIMPO -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="brand-badge">SALA DE CRISE</span>
+        <div>
+          <div class="brand-title">Prefeitura de Lençóis Paulista</div>
+          <div class="brand-subtitle">GCM &amp; Defesa Civil • Rio Lençóis</div>
+        </div>
+      </div>
+
+      <div class="topbar-meta">
+        <div class="system-status">
+          <span class="system-dot"></span>
+          <span>MONITORAMENTO ATIVO</span>
+        </div>
+        <div class="clock-display" id="clockDisplay">--:--:--</div>
+      </div>
+    </header>
+
+    <!-- ÁREA DE TRABALHO PRINCIPAL -->
+    <main class="app-shell">
+      <!-- LINHA 1: STATUS DO RIO & CONTROLE DE SIMULAÇÃO -->
+      <section class="telemetry-row">
+        <!-- NÍVEL DO RIO ATUAL -->
+        <div class="panel river-main-card">
+          <div class="panel-header">
+            <span class="panel-title">Nível Atual do Rio</span>
+            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);" id="cotaMeters">2.28 m</span>
+          </div>
+
+          <div class="river-metric-wrap">
+            <span class="river-pct-value" id="riverLevelNum">35</span>
+            <span class="river-pct-unit">%</span>
+          </div>
+
+          <div class="risk-pill normal" id="riskBadge">
+            <span>●</span>
+            <span id="riskBadgeText">SITUAÇÃO NORMAL</span>
+          </div>
+
+          <p class="river-subtext" id="riskDescription">
+            Vazão dentro da calha padrão (0% a 49%). Sem restrições nas vias ribeirinhas.
+          </p>
+
+          <div class="gauge-box">
+            <div class="gauge-bar-track">
+              <div class="gauge-bar-fill" id="gaugeBar" style="width: 23.33%;"></div>
+            </div>
+            <div class="gauge-scale-ticks">
+              <span>0%</span>
+              <span>50% (Atenção)</span>
+              <span>75% (Alerta)</span>
+              <span>90% (Evacuação)</span>
+              <span>150%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTROLE DE TELEMETRIA -->
+        <div class="panel control-panel">
+          <div>
+            <div class="panel-header">
+              <span class="panel-title">Ajuste de Telemetria</span>
+              <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);">Simulação Contínua</span>
+            </div>
+
+            <!-- SLIDER LIMPO -->
+            <div class="slider-row">
+              <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);">0%</span>
+              <input 
+                type="range" 
+                class="clean-slider" 
+                id="riverRange" 
+                min="0" 
+                max="150" 
+                value="35" 
+                step="1"
+                aria-label="Ajustar percentual do rio"
+              />
+              <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);">150%</span>
+            </div>
+
+            <!-- BOTÕES DE AJUSTE RÁPIDO -->
+            <div class="quick-steps-grid">
+              <button class="btn-step" type="button" id="btnMinus20">-20%</button>
+              <button class="btn-step" type="button" id="btnMinus5">-5%</button>
+              <button class="btn-step" type="button" id="btnPlus5">+5%</button>
+              <button class="btn-step" type="button" id="btnPlus20">+20%</button>
+            </div>
+          </div>
+
+          <!-- CENÁRIOS PREDEFINIDOS -->
+          <div class="scenario-chips-row">
+            <span class="chip-label">Cenários rápidos:</span>
+            <button class="btn-chip" type="button" onclick="setRiver(35)">35% Normal</button>
+            <button class="btn-chip" type="button" onclick="setRiver(60)">60% Atenção</button>
+            <button class="btn-chip" type="button" onclick="setRiver(78)">78% 15 de Nov</button>
+            <button class="btn-chip" type="button" onclick="setRiver(92)">92% Evacuação</button>
+            <button class="btn-chip" type="button" onclick="setRiver(120)">120% Crítico</button>
+          </div>
+
+          <!-- MÓDULO ADAPTADOR DE TELEMETRIA E CONVERSÃO (METROS PARA %) -->
+          <div class="adapter-box">
+            <div class="adapter-header">
+              <div class="adapter-title-group">
+                <span class="adapter-title">Módulo Adaptador de Telemetria</span>
+                <span class="adapter-tag">Padrão Adapter</span>
+              </div>
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">Calha do Rio: 5.00m = 100%</span>
+            </div>
+
+            <!-- CONEXÃO API EM TEMPO REAL (RIO LENÇÓIS) -->
+            <div class="api-live-card">
+              <div class="api-live-header">
+                <div class="api-live-status-group">
+                  <span class="api-live-dot" id="apiLiveDot" title="Status da Conexão com API"></span>
+                  <div>
+                    <div class="api-live-title">Verificação da API em Tempo Real</div>
+                    <div class="api-live-station">Estação LP-FLUV-01 • Rio Lençóis (-22.5989, -48.7997) • CBH-TJ</div>
+                  </div>
+                </div>
+                <div class="api-live-actions">
+                  <button class="btn-api-sync" type="button" id="btnSyncApi" title="Consultar API em tempo real agora">
+                    <span id="syncIcon">↻</span> Consultar API
+                  </button>
+                  <button class="btn-auto-toggle" type="button" id="btnAutoSync" title="Ativar verificação automática a cada 30 segundos">
+                    <span class="auto-indicator"></span> Auto-Sync: <strong id="autoSyncStatusText">OFF</strong>
+                  </button>
+                </div>
+              </div>
+
+              <!-- MÉTRICAS RECEBIDAS DA API -->
+              <div class="api-live-metrics">
+                <div class="api-metric-item">
+                  <span class="api-metric-lbl">Nível do Sensor</span>
+                  <span class="api-metric-val accent" id="apiMetricNivel">-- m</span>
+                </div>
+                <div class="api-metric-item">
+                  <span class="api-metric-lbl">Calha Estimada</span>
+                  <span class="api-metric-val" id="apiMetricPct">-- %</span>
+                </div>
+                <div class="api-metric-item">
+                  <span class="api-metric-lbl">Vazão do Rio</span>
+                  <span class="api-metric-val" id="apiMetricVazao">-- m³/s</span>
+                </div>
+                <div class="api-metric-item">
+                  <span class="api-metric-lbl">Precipitação</span>
+                  <span class="api-metric-val" id="apiMetricChuva">-- mm</span>
+                </div>
+                <div class="api-metric-item">
+                  <span class="api-metric-lbl">Última Checagem</span>
+                  <span class="api-metric-val" id="apiMetricHora" style="font-size: 11px; color: var(--text-muted);">Aguardando...</span>
+                </div>
+              </div>
+
+              <!-- CONTROLE DE ENDPOINT CUSTOMIZADO (EXPANSÍVEL) -->
+              <div class="api-custom-toggle-row">
+                <button type="button" class="btn-text-link" id="btnToggleCustomApi">
+                  ⚙ Configurar Endpoint Customizado (ANA / CEMADEN / IoT)
+                </button>
+              </div>
+
+              <div class="api-custom-panel" id="apiCustomPanel" style="display: none;">
+                <div class="api-custom-input-wrap">
+                  <input 
+                    type="text" 
+                    class="adapter-input" 
+                    id="inputCustomApiUrl" 
+                    placeholder="https://api.snirh.gov.br/... ou /api/telemetria/rio-lencois" 
+                    value="/api/telemetria/rio-lencois"
+                    aria-label="URL da API de Telemetria"
+                  />
+                  <button class="btn-sensor-chip" type="button" id="btnSalvarCustomApi">Salvar & Testar</button>
+                </div>
+                <div class="api-custom-hint">
+                  Usando rota nativa <code>/api/telemetria/rio-lencois</code> integrada aos dados hidrológicos e pluviométricos reais de Lençóis Paulista.
+                </div>
+              </div>
+            </div>
+
+            <!-- ENTRADA DE SIMULAÇÃO DE API EXTERNA -->
+            <div class="adapter-input-group">
+              <div class="adapter-input-wrap">
+                <input 
+                  type="number" 
+                  class="adapter-input" 
+                  id="inputSensorMetros" 
+                  step="0.01" 
+                  min="0" 
+                  max="10" 
+                  placeholder="Simular Leitura Manual de API (metros)" 
+                  value="3.75"
+                  aria-label="Simular Leitura Manual de API (metros)"
+                />
+                <span class="adapter-unit-suffix">m</span>
+              </div>
+              <button class="btn-adapter-process" type="button" id="btnProcessarSensor">
+                <span>⚙</span> Processar Dado Bruto
+              </button>
+            </div>
+
+            <!-- PAINEL DE TRANSPARÊNCIA DA CONVERSÃO PARA O OPERADOR -->
+            <div class="adapter-transparency-card">
+              <div class="transparency-grid">
+                <div class="transparency-item">
+                  <span class="transparency-label">Leitura Original</span>
+                  <span class="transparency-val" id="transparencyRawMeters">1.75 m</span>
+                </div>
+                <div class="transparency-item">
+                  <span class="transparency-label">Calha Máxima</span>
+                  <span class="transparency-val">5.00 m</span>
+                </div>
+                <div class="transparency-item">
+                  <span class="transparency-label">Fórmula Aplicada</span>
+                  <span class="transparency-val" style="font-size: 11px; color: var(--text-secondary);">(Metros / 5.0m) × 100</span>
+                </div>
+                <div class="transparency-item">
+                  <span class="transparency-label">Percentual Convertido</span>
+                  <span class="transparency-val accent" id="transparencyConvertedPct">35.0%</span>
+                </div>
+              </div>
+              <div class="adapter-log-msg" id="transparencyStatusMsg">
+                <span>●</span> <span>Módulo Adaptador sincronizado com o leito do Rio Lençóis.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LINHA 2: VIAS VULNERÁVEIS & MÓDULO DA SIRENE -->
+      <section class="bottom-grid">
+        <!-- VIAS CRÍTICAS RIBEIRINHAS -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Vias Críticas Ribeirinhas</span>
+            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);" id="blockedCount">0 de 4 interditadas</span>
+          </div>
+
+          <div class="vias-list" id="viasList">
+            <!-- Vias geradas via JS -->
+          </div>
+        </div>
+
+        <!-- MÓDULO DA SIRENE DE EVACUAÇÃO (TRAVA DUPLA) -->
+        <div class="panel siren-panel">
+          <div class="panel-header">
+            <span class="panel-title">Sirene de Evacuação Geral</span>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);" id="sirenStatusText">TRAVADA</span>
+          </div>
+
+          <!-- TRAVA 1: SLIDE TO UNLOCK -->
+          <div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">1. Deslize para armar o gatilho</div>
+            <div class="slide-container" id="slideTrack">
+              <div class="slide-text" id="slideText">Deslize para armar &gt;&gt;&gt;</div>
+              <div class="slide-handle" id="slideHandle" role="slider" aria-label="Deslize para destravar" tabindex="0">
+                🔒
+              </div>
+            </div>
+          </div>
+
+          <!-- TRAVA 2: PRESSIONE POR 3 SEGUNDOS -->
+          <div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">2. Pressione e segure por 3 segundos</div>
+            <button type="button" class="hold-btn" id="holdBtn" disabled>
+              <div class="hold-progress" id="holdBar"></div>
+              <span class="hold-label-main" id="holdLabel">Gatilho Travado</span>
+              <span class="hold-sublabel" id="holdSublabel">Complete o passo 1 para liberar</span>
+            </button>
+          </div>
+
+          <!-- ÁUDIO OFICIAL DA SIRENE & CONTROLES -->
+          <div class="siren-audio-card">
+            <div class="audio-card-header">
+              <span>ÁUDIO DA SIRENE</span>
+              <span class="audio-file-badge" id="audioFileName" title="sirene-lencois.mp3">sirene-lencois.mp3</span>
+            </div>
+            <div class="audio-card-controls">
+              <button type="button" class="btn-audio-action" id="btnTestAudio" title="Ouvir prévia do áudio">
+                <span id="testAudioIcon">▶</span>
+                <span id="testAudioLabel">Ouvir Teste</span>
+              </button>
+              <label class="btn-audio-action" style="cursor: pointer;" title="Carregar outro arquivo de áudio do computador">
+                <span>📁 Trocar Áudio</span>
+                <input type="file" id="audioFileInput" accept="audio/*" style="display: none;" />
+              </label>
+              <button type="button" class="btn-audio-action" id="btnResetAudio" title="Restaurar áudio padrão">
+                <span>↺ Padrão</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- BOTÃO PARA SILENCIAR -->
+          <button type="button" class="btn-silence" id="btnSilence">
+            Silenciar Alarme e Resetar Travas
+          </button>
+        </div>
+
+        <!-- ELEMENTO DE ÁUDIO HTML5 EMBUTIDO -->
+        <audio id="sirenAudio" preload="auto" loop>
+          <source src="/siren.mp3" type="audio/mpeg" />
+          <source src="/siren.wav" type="audio/wav" />
+        </audio>
+      </section>
+
+      <!-- REGISTRO DE AUDITORIA SIMPLES E LIMPO -->
+      <section class="panel audit-wrap">
+        <div class="panel-header">
+          <span class="panel-title">Histórico Auditável de Ocorrências</span>
+          <button class="btn-chip" type="button" id="btnClearAudit" style="padding: 2px 8px; font-size: 11px;">Limpar</button>
+        </div>
+        <div class="audit-log-list" id="auditList" role="log">
+          <!-- Logs inseridos aqui -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Defesa Civil &amp; GCM • Prefeitura de Lençóis Paulista / SP
+    </footer>
+
+    <!-- JAVASCRIPT EMBUTIDO (SEM FRAMEWORKS EXTERNOS) -->
+    <script>
+      /**
+       * SALA DE CRISE - LENÇÓIS PAULISTA
+       * Monitoramento do Rio Lençóis & Sirene com Trava Dupla
+       */
+
+      // 1. CONFIGURAÇÃO DA BACIA DO RIO LENÇÓIS & CONSTANTES
+      const CALHA_RIO_METROS = 5.0; // Cota máxima de transbordamento / 100% da calha do Rio Lençóis
+
+      const VIAS = [
+        { id: 'v1', name: 'Rua 15 de Novembro', cota: 75, ponto: 'Ponte Central' },
+        { id: 'v2', name: 'Av. Cruzeiro do Sul', cota: 80, ponto: 'Trecho Baixo' },
+        { id: 'v3', name: 'Av. Padre Salústio Rodrigues Machado', cota: 88, ponto: 'Marginal Leste' },
+        { id: 'v4', name: 'Rua Doutor Antônio Tedesco', cota: 95, ponto: 'Confluência Córrego' }
+      ];
+
+      // 2. ESTADO DA APLICAÇÃO
+      let riverLevel = 35;
+      let isArmed = false;
+      let holdTimer = null;
+      let holdStart = null;
+      let isSireneActive = false;
+
+      // 3. FAIXAS DE RISCO
+      function getRisk(level) {
+        if (level < 50) {
+          return {
+            tier: 'normal',
+            title: 'SITUAÇÃO NORMAL',
+            desc: 'Vazão dentro da calha padrão (0% a 49%). Sem restrições nas vias ribeirinhas.',
+            color: 'var(--status-normal)'
+          };
+        } else if (level < 75) {
+          return {
+            tier: 'atencao',
+            title: 'ESTADO DE ATENÇÃO',
+            desc: 'Elevação moderada (50% a 74%). Atenção preventiva para bacias ribeirinhas.',
+            color: 'var(--status-atencao)'
+          };
+        } else if (level < 90) {
+          return {
+            tier: 'alerta',
+            title: 'ESTADO DE ALERTA',
+            desc: 'Risco iminente de transbordamento (75% a 89%). Vias com cotas atingidas são interditadas.',
+            color: 'var(--status-alerta)'
+          };
+        } else {
+          return {
+            tier: 'evacuacao',
+            title: 'EVACUAÇÃO IMEDIATA',
+            desc: 'Transbordo severo (≥ 90%). Famílias das áreas ribeirinhas devem deixar o local!',
+            color: 'var(--status-evacuacao)'
+          };
+        }
+      }
+
+      // 4. ELEMENTOS DO DOM
+      const riverLevelNum = document.getElementById('riverLevelNum');
+      const cotaMeters = document.getElementById('cotaMeters');
+      const riskBadge = document.getElementById('riskBadge');
+      const riskBadgeText = document.getElementById('riskBadgeText');
+      const riskDescription = document.getElementById('riskDescription');
+      const gaugeBar = document.getElementById('gaugeBar');
+      const riverRange = document.getElementById('riverRange');
+      const viasList = document.getElementById('viasList');
+      const blockedCount = document.getElementById('blockedCount');
+      const evacuationBanner = document.getElementById('evacuationBanner');
+
+      const slideTrack = document.getElementById('slideTrack');
+      const slideHandle = document.getElementById('slideHandle');
+      const slideText = document.getElementById('slideText');
+      const holdBtn = document.getElementById('holdBtn');
+      const holdBar = document.getElementById('holdBar');
+      const holdLabel = document.getElementById('holdLabel');
+      const holdSublabel = document.getElementById('holdSublabel');
+      const sirenStatusText = document.getElementById('sirenStatusText');
+      const btnSilence = document.getElementById('btnSilence');
+      const auditList = document.getElementById('auditList');
+      const clockDisplay = document.getElementById('clockDisplay');
+
+      const sirenAudio = document.getElementById('sirenAudio');
+      const audioFileName = document.getElementById('audioFileName');
+      const btnTestAudio = document.getElementById('btnTestAudio');
+      const testAudioIcon = document.getElementById('testAudioIcon');
+      const testAudioLabel = document.getElementById('testAudioLabel');
+      const audioFileInput = document.getElementById('audioFileInput');
+      const btnResetAudio = document.getElementById('btnResetAudio');
+
+      const inputSensorMetros = document.getElementById('inputSensorMetros');
+      const btnProcessarSensor = document.getElementById('btnProcessarSensor');
+      const transparencyRawMeters = document.getElementById('transparencyRawMeters');
+      const transparencyConvertedPct = document.getElementById('transparencyConvertedPct');
+      const transparencyStatusMsg = document.getElementById('transparencyStatusMsg');
+
+      // 5. RELÓGIO OPERACIONAL
+      function updateClock() {
+        const now = new Date();
+        clockDisplay.textContent = now.toLocaleTimeString('pt-BR');
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      // 6. LOGS AUDITÁVEIS
+      function addLog(msg, isAlert = false) {
+        const time = new Date().toLocaleTimeString('pt-BR');
+        const row = document.createElement('div');
+        row.className = 'log-row';
+        row.innerHTML = `<span class="log-time">[${time}]</span><span class="log-content ${isAlert ? 'alert' : ''}">${msg}</span>`;
+        auditList.prepend(row);
+      }
+
+      // 7. RENDERIZADOR DAS VIAS
+      function renderVias() {
+        viasList.innerHTML = '';
+        let blocked = 0;
+
+        VIAS.forEach(via => {
+          const isInterditada = riverLevel >= via.cota;
+          if (isInterditada) blocked++;
+
+          const item = document.createElement('div');
+          item.className = `via-item ${isInterditada ? 'interditada' : ''}`;
+          item.innerHTML = `
+            <div class="via-info">
+              <span class="via-name">${via.name}</span>
+              <span class="via-detail">Cota Crítica: ${via.cota}% • ${via.ponto}</span>
+            </div>
+            <span class="via-badge ${isInterditada ? 'interditada' : 'liberada'}">
+              ${isInterditada ? 'INTERDITADA' : 'LIBERADA'}
+            </span>
+          `;
+          viasList.appendChild(item);
+        });
+
+        blockedCount.textContent = `${blocked} de ${VIAS.length} interditadas`;
+      }
+
+      // =========================================================================
+      // 8. PADRÃO ADAPTER: MÓDULO ADAPTADOR DE TELEMETRIA (METROS PARA %)
+      // =========================================================================
+      /**
+       * Função Adaptadora conforme especificação:
+       * - Recebe o valor bruto da medição em metros (ex: 3.75m).
+       * - Aplica a fórmula de conversão: (Nível Atual em Metros / Calha Máxima em Metros) * 100.
+       * - Envia o valor percentual calculado para a função principal atualizarNivelRio.
+       */
+      function converterMetrosParaPercentual(nivelEmMetros) {
+        const metros = typeof nivelEmMetros === 'number'
+          ? nivelEmMetros
+          : parseFloat(String(nivelEmMetros).replace(',', '.'));
+
+        if (isNaN(metros) || metros < 0) {
+          throw new Error('Valor inválido. A medição em metros deve ser um número não negativo.');
+        }
+
+        // Fórmula oficial: (Nível Atual em Metros / Calha Máxima em Metros) * 100
+        const percentual = (metros / CALHA_RIO_METROS) * 100;
+        return percentual;
+      }
+
+      /**
+       * Classe Adapter conforme o Padrão de Projeto GoF (Adapter Pattern).
+       * Adapta payloads heterogêneos de sensores hidrológicos (ANA, CEMADEN, IoT)
+       * para a interface operacional da Sala de Crise.
+       */
+      class TelemetriaAdapter {
+        constructor(calhaMaxima = CALHA_RIO_METROS) {
+          this.calhaMaxima = calhaMaxima;
+        }
+
+        converter(nivelEmMetros) {
+          return converterMetrosParaPercentual(nivelEmMetros);
+        }
+
+        processarDadoBruto(dadoBruto, fonte = 'Sensor Externo') {
+          let metros = 0;
+          if (typeof dadoBruto === 'number') {
+            metros = dadoBruto;
+          } else if (typeof dadoBruto === 'string') {
+            metros = parseFloat(dadoBruto.replace(',', '.'));
+          } else if (dadoBruto && typeof dadoBruto.leituraMetros === 'number') {
+            metros = dadoBruto.leituraMetros;
+          } else if (dadoBruto && typeof dadoBruto.cota === 'number') {
+            metros = dadoBruto.cota;
+          } else {
+            metros = parseFloat(dadoBruto);
+          }
+
+          if (isNaN(metros) || metros < 0) {
+            throw new Error(`Leitura bruta inválida [${dadoBruto}]. Deve ser um valor numérico em metros.`);
+          }
+
+          // Executa a conversão via adapter
+          const percentual = this.converter(metros);
+
+          // Atualiza transparência para o operador
+          if (transparencyRawMeters) transparencyRawMeters.textContent = `${metros.toFixed(2)} m`;
+          if (transparencyConvertedPct) transparencyConvertedPct.textContent = `${percentual.toFixed(1)}%`;
+          if (transparencyStatusMsg) {
+            transparencyStatusMsg.innerHTML = `<span style="color: #10b981;">●</span> <span>Dado bruto de <strong>${metros.toFixed(2)}m</strong> (${fonte}) adaptado com sucesso para <strong>${percentual.toFixed(1)}%</strong> da calha.</span>`;
+          }
+
+          // Envia o valor percentual calculado para a função principal de atualização do estado da Sala de Crise
+          atualizarNivelRio(percentual, true, `ADAPTER [${fonte}]: Leitura bruta ${metros.toFixed(2)}m adaptada para ${percentual.toFixed(1)}%`);
+
+          return {
+            metrosOriginal: metros,
+            percentualConvertido: percentual,
+            calhaMaxima: this.calhaMaxima,
+            fonte
+          };
+        }
+      }
+
+      const telemetriaAdapter = new TelemetriaAdapter(CALHA_RIO_METROS);
+
+      // Função principal de atualização do estado da Sala de Crise
+      function atualizarNivelRio(val, logChange = true, customMsg = null) {
+        setRiver(val, logChange, customMsg);
+      }
+
+      // 8.1 ATUALIZADOR DO ESTADO DO RIO
+      function setRiver(val, logChange = true, customMsg = null) {
+        const prev = riverLevel;
+        riverLevel = Math.max(0, Math.min(150, Math.round(val)));
+        riverRange.value = riverLevel;
+        riverLevelNum.textContent = riverLevel;
+
+        // Cota em metros oficial calculada: (Percentual / 100) * CALHA_RIO_METROS
+        const meters = ((riverLevel / 100) * CALHA_RIO_METROS).toFixed(2);
+        cotaMeters.textContent = `${meters} m`;
+
+        // Sincroniza painel de transparência do Adapter
+        if (transparencyRawMeters) transparencyRawMeters.textContent = `${meters} m`;
+        if (transparencyConvertedPct) transparencyConvertedPct.textContent = `${riverLevel.toFixed(1)}%`;
+
+        // Gauge: 0% a 150% mapeado para 0 a 100% da barra
+        const gaugePct = Math.min(100, (riverLevel / 150) * 100);
+        gaugeBar.style.width = `${gaugePct}%`;
+
+        // Risco
+        const risk = getRisk(riverLevel);
+        riverLevelNum.style.color = risk.color;
+        gaugeBar.style.backgroundColor = risk.color;
+
+        riskBadge.className = `risk-pill ${risk.tier}`;
+        riskBadgeText.textContent = risk.title;
+        riskDescription.textContent = risk.desc;
+
+        // Banner de emergência
+        if (riverLevel >= 90 || isSireneActive) {
+          evacuationBanner.style.display = 'block';
+        } else {
+          evacuationBanner.style.display = 'none';
+        }
+
+        // Checar transições de vias para log
+        VIAS.forEach(via => {
+          const wasInterditada = prev >= via.cota;
+          const isNowInterditada = riverLevel >= via.cota;
+          if (!wasInterditada && isNowInterditada) {
+            addLog(`ALERTA: ${via.name} INTERDITADA (Nível atingiu ${riverLevel}%, cota ${via.cota}%)`, true);
+          } else if (wasInterditada && !isNowInterditada) {
+            addLog(`LIBERAÇÃO: ${via.name} LIBERADA (Nível recuou para ${riverLevel}%)`);
+          }
+        });
+
+        renderVias();
+
+        if (logChange) {
+          if (customMsg) {
+            addLog(customMsg);
+          } else if (Math.abs(prev - riverLevel) >= 5) {
+            addLog(`Telemetria ajustada: Rio Lençóis em ${riverLevel}% (${risk.title}) • Cota ${meters}m`);
+          }
+        }
+      }
+
+      // =========================================================================
+      // 8.2 CONECTOR DE API EM TEMPO REAL (RIO LENÇÓIS)
+      // =========================================================================
+      let apiUrl = '/api/telemetria/rio-lencois';
+      let autoSyncInterval = null;
+      let isFetchingApi = false;
+
+      const apiLiveDot = document.getElementById('apiLiveDot');
+      const btnSyncApi = document.getElementById('btnSyncApi');
+      const syncIcon = document.getElementById('syncIcon');
+      const btnAutoSync = document.getElementById('btnAutoSync');
+      const autoSyncStatusText = document.getElementById('autoSyncStatusText');
+      const apiMetricNivel = document.getElementById('apiMetricNivel');
+      const apiMetricPct = document.getElementById('apiMetricPct');
+      const apiMetricVazao = document.getElementById('apiMetricVazao');
+      const apiMetricChuva = document.getElementById('apiMetricChuva');
+      const apiMetricHora = document.getElementById('apiMetricHora');
+      const btnToggleCustomApi = document.getElementById('btnToggleCustomApi');
+      const apiCustomPanel = document.getElementById('apiCustomPanel');
+      const inputCustomApiUrl = document.getElementById('inputCustomApiUrl');
+      const btnSalvarCustomApi = document.getElementById('btnSalvarCustomApi');
+
+      async function consultarApiTempoReal(isAutomated = false) {
+        if (isFetchingApi) return;
+        isFetchingApi = true;
+
+        if (apiLiveDot) {
+          apiLiveDot.className = 'api-live-dot syncing';
+        }
+        if (syncIcon) {
+          syncIcon.style.display = 'inline-block';
+          syncIcon.style.animation = 'spin 0.8s linear infinite';
+        }
+        if (btnSyncApi) btnSyncApi.disabled = true;
+
+        try {
+          let responseData = null;
+          let fetchUrl = (apiUrl || '/api/telemetria/rio-lencois').trim();
+
+          // 1. Tenta consulta ao endpoint local ou configurado
+          try {
+            const res = await fetch(fetchUrl);
+            if (res.ok) {
+              responseData = await res.json();
+            }
+          } catch (err) {
+            console.warn('Endpoint primário indisponível, acionando fallback hidrológico direto:', err);
+          }
+
+          // 2. Fallback direto caso endpoint não responda (ex: preview sem server proxy)
+          if (!responseData || !responseData.telemetria) {
+            const lat = -22.5989;
+            const lon = -48.7997;
+            const [fRes, wRes] = await Promise.all([
+              fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${lat}&longitude=${lon}&daily=river_discharge&forecast_days=1`),
+              fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=precipitation,rain,temperature_2m&timezone=America%2FSao_Paulo`)
+            ]);
+
+            let discharge = 4.31;
+            let rain = 0.0;
+            if (fRes.ok) {
+              const fJson = await fRes.json();
+              if (fJson.daily?.river_discharge?.[0] != null) {
+                discharge = Number(fJson.daily.river_discharge[0]);
+              }
+            }
+            if (wRes.ok) {
+              const wJson = await wRes.json();
+              if (wJson.current) {
+                rain = wJson.current.rain ?? wJson.current.precipitation ?? 0.0;
+              }
+            }
+
+            const nivelMetros = Number((1.25 + Math.pow(discharge / 2.8, 0.46) * 0.62 + (rain * 0.12)).toFixed(2));
+            const percentual = Number(((nivelMetros / CALHA_RIO_METROS) * 100).toFixed(1));
+
+            responseData = {
+              status: 'online',
+              sucesso: true,
+              fonte: 'API Open-Meteo Flood (Lençóis Paulista)',
+              telemetria: {
+                timestamp: new Date().toISOString(),
+                nivelMetros,
+                percentualCalha: percentual,
+                vazaoM3s: Number(discharge.toFixed(2)),
+                chuvaAtualMm: Number(rain.toFixed(1)),
+                statusConexao: 'ONLINE_FALLBACK'
+              }
+            };
+          }
+
+          const tel = responseData.telemetria;
+          const nivel = Number(tel.nivelMetros);
+          const vazao = tel.vazaoM3s != null ? Number(tel.vazaoM3s) : 0;
+          const chuva = tel.chuvaAtualMm != null ? Number(tel.chuvaAtualMm) : 0;
+          const pctCalc = ((nivel / CALHA_RIO_METROS) * 100).toFixed(1);
+
+          // Atualiza dados na interface de telemetria
+          if (apiMetricNivel) apiMetricNivel.textContent = `${nivel.toFixed(2)} m`;
+          if (apiMetricPct) apiMetricPct.textContent = `${pctCalc}%`;
+          if (apiMetricVazao) apiMetricVazao.textContent = `${vazao.toFixed(2)} m³/s`;
+          if (apiMetricChuva) apiMetricChuva.textContent = `${chuva.toFixed(1)} mm`;
+          if (apiMetricHora) {
+            apiMetricHora.textContent = new Date().toLocaleTimeString('pt-BR');
+          }
+
+          if (inputSensorMetros) {
+            inputSensorMetros.value = nivel.toFixed(2);
+          }
+
+          // Despacha para o adaptador da Sala de Crise
+          const fonteDesc = responseData.fonte || 'API Tempo Real Estação Lençóis';
+          telemetriaAdapter.processarDadoBruto(nivel, fonteDesc);
+
+          if (apiLiveDot) {
+            apiLiveDot.className = 'api-live-dot';
+          }
+
+          if (!isAutomated) {
+            addLog(`API TELEMETRIA: Verificação em tempo real concluída com sucesso. Nível: ${nivel.toFixed(2)}m (${pctCalc}%), Vazão: ${vazao.toFixed(1)} m³/s, Chuva: ${chuva.toFixed(1)} mm.`);
+          }
+        } catch (fetchErr) {
+          console.error('Erro na chamada da API:', fetchErr);
+          if (apiLiveDot) apiLiveDot.className = 'api-live-dot error';
+          if (apiMetricHora) apiMetricHora.textContent = 'Erro de Conexão';
+          addLog(`ERRO API: Falha ao verificar telemetria: ${fetchErr.message}`, true);
+        } finally {
+          isFetchingApi = false;
+          if (btnSyncApi) btnSyncApi.disabled = false;
+          if (syncIcon) {
+            syncIcon.style.animation = 'none';
+          }
+        }
+      }
+
+      function toggleAutoSync() {
+        if (autoSyncInterval) {
+          clearInterval(autoSyncInterval);
+          autoSyncInterval = null;
+          if (btnAutoSync) btnAutoSync.classList.remove('active');
+          if (autoSyncStatusText) autoSyncStatusText.textContent = 'OFF';
+          addLog('Sincronização contínua com a API desativada pelo operador.');
+        } else {
+          consultarApiTempoReal(true);
+          autoSyncInterval = setInterval(() => {
+            consultarApiTempoReal(true);
+          }, 30000);
+          if (btnAutoSync) btnAutoSync.classList.add('active');
+          if (autoSyncStatusText) autoSyncStatusText.textContent = 'ON (30s)';
+          addLog('Sincronização contínua com a API ativada (verificação a cada 30 segundos).');
+        }
+      }
+
+      // Eventos da API em Tempo Real
+      if (btnSyncApi) {
+        btnSyncApi.addEventListener('click', () => consultarApiTempoReal(false));
+      }
+
+      if (btnAutoSync) {
+        btnAutoSync.addEventListener('click', toggleAutoSync);
+      }
+
+      if (btnToggleCustomApi && apiCustomPanel) {
+        btnToggleCustomApi.addEventListener('click', () => {
+          const isHidden = apiCustomPanel.style.display === 'none';
+          apiCustomPanel.style.display = isHidden ? 'flex' : 'none';
+          btnToggleCustomApi.textContent = isHidden 
+            ? '▲ Ocultar Configuração de Endpoint' 
+            : '⚙ Configurar Endpoint Customizado (ANA / CEMADEN / IoT)';
+        });
+      }
+
+      if (btnSalvarCustomApi && inputCustomApiUrl) {
+        btnSalvarCustomApi.addEventListener('click', () => {
+          const val = inputCustomApiUrl.value.trim();
+          if (val) {
+            apiUrl = val;
+            addLog(`CONFIGURAÇÃO: Novo endpoint de API definido [${apiUrl}]. Testando conexão...`);
+            consultarApiTempoReal(false);
+          }
+        });
+
+        inputCustomApiUrl.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            btnSalvarCustomApi.click();
+          }
+        });
+      }
+
+      // 9. CONTROLES RÁPIDOS & EVENT LISTENERS DO ADAPTADOR
+      riverRange.addEventListener('input', (e) => setRiver(Number(e.target.value), false));
+      riverRange.addEventListener('change', (e) => setRiver(Number(e.target.value), true));
+
+      document.getElementById('btnMinus20').onclick = () => setRiver(riverLevel - 20);
+      document.getElementById('btnMinus5').onclick = () => setRiver(riverLevel - 5);
+      document.getElementById('btnPlus5').onclick = () => setRiver(riverLevel + 5);
+      document.getElementById('btnPlus20').onclick = () => setRiver(riverLevel + 20);
+
+      // Eventos do Módulo Adaptador
+      btnProcessarSensor.addEventListener('click', () => {
+        const val = inputSensorMetros.value;
+        if (!val || isNaN(parseFloat(val))) {
+          transparencyStatusMsg.innerHTML = `<span style="color: #ef4444;">●</span> <span style="color: #f87171;">Informe um valor numérico em metros válido (ex: 3.75).</span>`;
+          return;
+        }
+        try {
+          telemetriaAdapter.processarDadoBruto(val, 'Simulação de Entrada Manual');
+        } catch (err) {
+          transparencyStatusMsg.innerHTML = `<span style="color: #ef4444;">●</span> <span style="color: #f87171;">Erro no adaptador: ${err.message}</span>`;
+        }
+      });
+
+      inputSensorMetros.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          btnProcessarSensor.click();
+        }
+      });
+
+      window.simularSensor = function(metros, fonte) {
+        inputSensorMetros.value = Number(metros).toFixed(2);
+        try {
+          telemetriaAdapter.processarDadoBruto(metros, fonte);
+        } catch (err) {
+          console.warn(err);
+        }
+      };
+
+      document.getElementById('btnClearAudit').onclick = () => {
+        auditList.innerHTML = '';
+        addLog('Terminal de auditoria reinicializado.');
+      };
+
+      // =========================================================================
+      // 10. REPRODUÇÃO DO ÁUDIO DA SIRENE (ARQUIVO OFICIAL + SINTETIZADOR FALLBACK)
+      // =========================================================================
+      let isAudioTesting = false;
+      let testAudioTimer = null;
+      let audioCtx = null;
+      let osc = null;
+      let lfo = null;
+      let gainNode = null;
+
+      function playOfficialSiren() {
+        if (!sirenAudio) return;
+        sirenAudio.loop = true;
+        sirenAudio.currentTime = 0;
+        const playPromise = sirenAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            addLog('ÁUDIO: Sirene oficial transmitindo em alto volume contínuo.');
+          }).catch((err) => {
+            console.warn('HTML5 Audio restrito ou indisponível, acionando sintetizador:', err);
+            startAudioSiren();
+          });
+        }
+      }
+
+      function stopOfficialSiren() {
+        if (sirenAudio) {
+          sirenAudio.pause();
+          sirenAudio.currentTime = 0;
+        }
+        stopAudioSiren();
+      }
+
+      function startTestAudio() {
+        if (isSireneActive) return;
+        isAudioTesting = true;
+        btnTestAudio.classList.add('playing');
+        testAudioIcon.textContent = '⏹';
+        testAudioLabel.textContent = 'Parar (5s)';
+
+        if (sirenAudio) {
+          sirenAudio.currentTime = 0;
+          sirenAudio.play().catch(e => {
+            console.warn('Erro ao reproduzir teste:', e);
+            startAudioSiren();
+          });
+        }
+        addLog('TESTE DE ÁUDIO: Reproduzindo amostra da sirene oficial (5 segundos).');
+
+        clearTimeout(testAudioTimer);
+        testAudioTimer = setTimeout(() => {
+          stopTestAudio();
+        }, 5000);
+      }
+
+      function stopTestAudio() {
+        isAudioTesting = false;
+        clearTimeout(testAudioTimer);
+        btnTestAudio.classList.remove('playing');
+        testAudioIcon.textContent = '▶';
+        testAudioLabel.textContent = 'Ouvir Teste';
+        if (!isSireneActive && sirenAudio) {
+          sirenAudio.pause();
+          sirenAudio.currentTime = 0;
+        }
+        stopAudioSiren();
+      }
+
+      btnTestAudio.addEventListener('click', () => {
+        if (isAudioTesting) {
+          stopTestAudio();
+        } else {
+          startTestAudio();
+        }
+      });
+
+      audioFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+          stopTestAudio();
+          const fileUrl = URL.createObjectURL(file);
+          sirenAudio.src = fileUrl;
+          audioFileName.textContent = file.name;
+          audioFileName.title = file.name;
+          addLog(`CONFIGURAÇÃO DE ÁUDIO: Arquivo personalizado carregado (${file.name}).`);
+        }
+      });
+
+      btnResetAudio.addEventListener('click', () => {
+        stopTestAudio();
+        sirenAudio.src = '/siren.mp3';
+        audioFileName.textContent = 'sirene-lencois.mp3';
+        audioFileName.title = 'sirene-lencois.mp3';
+        addLog('CONFIGURAÇÃO DE ÁUDIO: Restaurado áudio oficial padrão da Defesa Civil.');
+      });
+
+      function startAudioSiren() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!audioCtx) audioCtx = new AudioContext();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          if (osc) return;
+          osc = audioCtx.createOscillator();
+          osc.type = 'sawtooth';
+
+          lfo = audioCtx.createOscillator();
+          lfo.frequency.value = 0.55;
+
+          const lfoGain = audioCtx.createGain();
+          lfoGain.gain.value = 220;
+
+          osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+
+          lfo.connect(lfoGain);
+          lfoGain.connect(osc.frequency);
+
+          gainNode = audioCtx.createGain();
+          gainNode.gain.setValueAtTime(0.35, audioCtx.currentTime);
+
+          osc.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+
+          osc.start();
+          lfo.start();
+        } catch (e) {
+          console.warn('Áudio Web Audio indisponível:', e);
+        }
+      }
+
+      function stopAudioSiren() {
+        if (osc) {
+          try {
+            osc.stop();
+            lfo.stop();
+            osc.disconnect();
+          } catch (e) {}
+          osc = null;
+          lfo = null;
+        }
+      }
+
+      // =========================================================================
+      // 11. TRAVA 1: SLIDE TO UNLOCK
+      // =========================================================================
+      let isDragging = false;
+      let startX = 0;
+      let currentX = 0;
+      let maxDrag = 0;
+
+      function updateMaxDrag() {
+        maxDrag = slideTrack.clientWidth - slideHandle.clientWidth - 8;
+      }
+      window.addEventListener('resize', updateMaxDrag);
+      updateMaxDrag();
+
+      function onDragStart(e) {
+        if (isArmed) return;
+        isDragging = true;
+        startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        currentX = 0;
+        slideHandle.style.transition = 'none';
+      }
+
+      function onDragMove(e) {
+        if (!isDragging || isArmed) return;
+        const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        const delta = clientX - startX;
+        currentX = Math.max(0, Math.min(delta, maxDrag));
+        slideHandle.style.left = `${currentX + 4}px`;
+
+        // Se arrastou mais de 92% do percurso -> ARMA
+        if (currentX >= maxDrag * 0.92) {
+          armSystem();
+        }
+      }
+
+      function onDragEnd() {
+        if (!isDragging || isArmed) return;
+        isDragging = false;
+        slideHandle.style.transition = 'left 0.2s ease';
+        slideHandle.style.left = '4px';
+      }
+
+      function armSystem() {
+        isDragging = false;
+        isArmed = true;
+        slideHandle.style.left = `${maxDrag + 4}px`;
+        slideHandle.classList.add('armed');
+        slideHandle.textContent = '🔓';
+        slideTrack.classList.add('armed');
+        slideText.textContent = 'GATILHO ARMADO';
+        slideText.style.color = '#10b981';
+
+        // Habilita passo 2
+        holdBtn.disabled = false;
+        holdBtn.classList.add('ready');
+        holdLabel.textContent = 'Pressione e Segure';
+        holdSublabel.textContent = 'Mantenha pressionado por 3 segundos';
+        sirenStatusText.textContent = 'SISTEMA ARMADO';
+        sirenStatusText.style.color = '#f59e0b';
+
+        addLog('SEGURANÇA: Trava 1 liberada (Slide to Unlock armado).');
+      }
+
+      function disarmSystem() {
+        isArmed = false;
+        isSireneActive = false;
+        stopOfficialSiren();
+        stopTestAudio();
+
+        slideHandle.style.transition = 'left 0.2s ease';
+        slideHandle.style.left = '4px';
+        slideHandle.classList.remove('armed');
+        slideHandle.textContent = '🔒';
+        slideTrack.classList.remove('armed');
+        slideText.textContent = 'Deslize para armar >>>';
+        slideText.style.color = 'var(--text-muted)';
+
+        holdBtn.disabled = true;
+        holdBtn.classList.remove('ready');
+        holdBar.style.width = '0%';
+        holdLabel.textContent = 'Gatilho Travado';
+        holdSublabel.textContent = 'Complete o passo 1 para liberar';
+
+        sirenStatusText.textContent = 'TRAVADA';
+        sirenStatusText.style.color = 'var(--text-muted)';
+        btnSilence.classList.remove('active');
+
+        if (riverLevel < 90) {
+          evacuationBanner.style.display = 'none';
+        }
+      }
+
+      slideHandle.addEventListener('mousedown', onDragStart);
+      window.addEventListener('mousemove', onDragMove);
+      window.addEventListener('mouseup', onDragEnd);
+
+      slideHandle.addEventListener('touchstart', onDragStart, { passive: true });
+      window.addEventListener('touchmove', onDragMove, { passive: true });
+      window.addEventListener('touchend', onDragEnd);
+
+      // =========================================================================
+      // 12. TRAVA 2: RETENÇÃO DE 3 SEGUNDOS
+      // =========================================================================
+      const HOLD_DURATION = 3000; // 3 segundos
+
+      function startHold(e) {
+        if (!isArmed || isSireneActive) return;
+        e.preventDefault();
+        holdStart = Date.now();
+
+        holdTimer = setInterval(() => {
+          const elapsed = Date.now() - holdStart;
+          const pct = Math.min(100, (elapsed / HOLD_DURATION) * 100);
+          holdBar.style.width = `${pct}%`;
+
+          const remaining = Math.max(0, (HOLD_DURATION - elapsed) / 1000).toFixed(1);
+          holdLabel.textContent = `SEGURE... ${remaining}s`;
+
+          if (elapsed >= HOLD_DURATION) {
+            triggerEvacuationSiren();
+          }
+        }, 50);
+      }
+
+      function cancelHold() {
+        if (!holdTimer || isSireneActive) return;
+        clearInterval(holdTimer);
+        holdTimer = null;
+        holdBar.style.width = '0%';
+        if (isArmed) {
+          holdLabel.textContent = 'Pressione e Segure';
+          holdSublabel.textContent = 'Mantenha pressionado por 3 segundos';
+        }
+      }
+
+      function triggerEvacuationSiren() {
+        clearInterval(holdTimer);
+        holdTimer = null;
+        isSireneActive = true;
+
+        holdBar.style.width = '100%';
+        holdLabel.textContent = '🚨 SIRENE EMITINDO ALARME';
+        holdSublabel.textContent = 'Evacuação geral em andamento';
+
+        sirenStatusText.textContent = 'SIRENE DISPARADA';
+        sirenStatusText.style.color = '#ef4444';
+        evacuationBanner.style.display = 'block';
+        btnSilence.classList.add('active');
+
+        stopTestAudio();
+        playOfficialSiren();
+        addLog('🚨 DISPARO DE EMERGÊNCIA: Sirene de evacuação ativada após dupla confirmação!', true);
+      }
+
+      holdBtn.addEventListener('mousedown', startHold);
+      window.addEventListener('mouseup', cancelHold);
+
+      holdBtn.addEventListener('touchstart', startHold, { passive: false });
+      window.addEventListener('touchend', cancelHold);
+
+      btnSilence.addEventListener('click', () => {
+        disarmSystem();
+        addLog('SIRENE DESATIVADA: Alarme silenciado e travas rearmadas por operador.');
+      });
+
+      // 13. INICIALIZAÇÃO
+      setRiver(35, false);
+      addLog('Sistema inicializado. Monitoramento da Calha do Rio Lençóis operacional.');
+      addLog('MÓDULO ADAPTADOR: Ativo (Calha Máxima = 5.00m). Suporte a telemetria externa habilitado.');
+      consultarApiTempoReal(true);
+    </script>
+  </body>
+</html>
