@@ -387,322 +387,12 @@
         color: #f8fafc;
       }
 
-      /* ==========================================================================
-         MÓDULO ADAPTADOR DE TELEMETRIA (PADRÃO ADAPTER)
-         ========================================================================== */
-      .adapter-box {
-        margin-top: 16px;
-        padding-top: 14px;
-        border-top: 1px solid var(--border);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .adapter-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-
-      .adapter-title-group {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .adapter-title {
-        font-size: 11px;
-        font-family: var(--font-mono);
-        text-transform: uppercase;
-        color: var(--text-primary);
-        font-weight: 700;
-        letter-spacing: 0.6px;
-      }
-
-      .adapter-tag {
-        font-size: 10px;
-        font-family: var(--font-mono);
-        background: rgba(56, 189, 248, 0.12);
-        color: #38bdf8;
-        border: 1px solid rgba(56, 189, 248, 0.3);
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-weight: 600;
-      }
-
-      .adapter-input-group {
-        display: flex;
-        gap: 8px;
-        align-items: stretch;
-      }
-
-      .adapter-input-wrap {
-        position: relative;
-        flex: 1;
-      }
-
-      .adapter-input {
-        width: 100%;
-        background: #090e15;
-        border: 1px solid var(--border);
-        color: var(--text-primary);
-        font-family: var(--font-mono);
-        font-size: 13px;
-        padding: 8px 36px 8px 12px;
-        border-radius: 6px;
-        outline: none;
-        transition: border-color 0.15s;
-      }
-
-      .adapter-input:focus {
-        border-color: #38bdf8;
-      }
-
-      .adapter-unit-suffix {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--text-muted);
-        pointer-events: none;
-      }
-
-      .btn-adapter-process {
-        background: #0284c7;
-        color: #ffffff;
-        border: none;
-        font-family: var(--font-mono);
-        font-size: 12px;
-        font-weight: 700;
-        padding: 0 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        white-space: nowrap;
-        transition: background 0.15s;
-      }
-
-      .btn-adapter-process:hover {
-        background: #0369a1;
-      }
-
-      .adapter-quick-presets {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: wrap;
-      }
-
-      .btn-sensor-chip {
-        background: #090e15;
-        border: 1px solid #1e293b;
-        color: var(--text-secondary);
-        font-family: var(--font-mono);
-        font-size: 11px;
-        padding: 4px 8px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-
-      .btn-sensor-chip:hover {
-        background: #1e293b;
-        color: #38bdf8;
-        border-color: #38bdf8;
-      }
-
-      /* ==========================================================================
-         CONEXÃO API EM TEMPO REAL (RIO LENÇÓIS)
-         ========================================================================== */
-      .api-live-card {
-        background: #090e15;
-        border: 1px solid rgba(56, 189, 248, 0.25);
-        border-radius: 6px;
-        padding: 10px 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .api-live-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .api-live-status-group {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .api-live-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #10b981;
-        box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
-        flex-shrink: 0;
-        transition: all 0.2s;
-      }
-
-      .api-live-dot.syncing {
-        background: #38bdf8;
-        box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
-        animation: pulseSync 0.9s infinite alternate;
-      }
-
-      .api-live-dot.error {
-        background: #ef4444;
-        box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
-      }
-
-      @keyframes pulseSync {
-        from { opacity: 0.35; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1.15); }
-      }
-
-      @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-
-      .api-live-title {
-        font-size: 11px;
-        font-family: var(--font-mono);
-        font-weight: 700;
-        color: var(--text-primary);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .api-live-station {
-        font-size: 10px;
-        font-family: var(--font-mono);
-        color: var(--text-muted);
-      }
-
-      .api-live-actions {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .btn-api-sync {
-        background: #1e293b;
-        color: #38bdf8;
-        border: 1px solid rgba(56, 189, 248, 0.35);
-        font-family: var(--font-mono);
-        font-size: 11px;
-        font-weight: 600;
-        padding: 5px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        transition: all 0.15s;
-      }
-
-      .btn-api-sync:hover {
-        background: rgba(56, 189, 248, 0.15);
-        border-color: #38bdf8;
-      }
-
-      .btn-api-sync:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      .btn-auto-toggle {
-        background: #0f172a;
-        color: var(--text-secondary);
-        border: 1px solid var(--border);
-        font-family: var(--font-mono);
-        font-size: 11px;
-        padding: 5px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.15s;
-      }
-
-      .btn-auto-toggle.active {
-        background: rgba(16, 185, 129, 0.12);
-        color: #10b981;
-        border-color: rgba(16, 185, 129, 0.4);
-      }
-
-      .btn-auto-toggle .auto-indicator {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--text-muted);
-        transition: all 0.2s;
-      }
-
-      .btn-auto-toggle.active .auto-indicator {
-        background: #10b981;
-        box-shadow: 0 0 6px #10b981;
-      }
-
-      .api-live-metrics {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
-        gap: 8px;
-        background: #05080c;
-        border: 1px solid #131c26;
-        border-radius: 4px;
-        padding: 8px 10px;
-      }
-
-      .api-metric-item {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-
-      .api-metric-lbl {
-        font-size: 9px;
-        font-family: var(--font-mono);
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-      }
-
-      .api-metric-val {
-        font-size: 12px;
-        font-family: var(--font-mono);
-        font-weight: 700;
-        color: var(--text-primary);
-      }
-
-      .api-metric-val.accent {
-        color: #38bdf8;
-      }
-
-      .api-custom-toggle-row {
-        display: flex;
-        justify-content: flex-end;
-      }
-
       .btn-text-link {
         background: none;
         border: none;
         color: var(--text-muted);
         font-family: var(--font-mono);
-        font-size: 10px;
+        font-size: 11px;
         cursor: pointer;
         padding: 0;
         text-decoration: underline;
@@ -712,86 +402,6 @@
 
       .btn-text-link:hover {
         color: #38bdf8;
-      }
-
-      .api-custom-panel {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        padding-top: 8px;
-        border-top: 1px dashed #1e293b;
-      }
-
-      .api-custom-input-wrap {
-        display: flex;
-        gap: 6px;
-      }
-
-      .api-custom-hint {
-        font-size: 10px;
-        font-family: var(--font-mono);
-        color: var(--text-muted);
-        line-height: 1.4;
-      }
-
-      .api-custom-hint code {
-        color: #38bdf8;
-        background: #0f172a;
-        padding: 1px 4px;
-        border-radius: 3px;
-      }
-
-      /* PAINEL DE TRANSPARÊNCIA DA CONVERSÃO */
-      .adapter-transparency-card {
-        background: #090e15;
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 10px 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .transparency-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-        gap: 8px;
-      }
-
-      .transparency-item {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-
-      .transparency-label {
-        font-size: 10px;
-        font-family: var(--font-mono);
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .transparency-val {
-        font-size: 13px;
-        font-family: var(--font-mono);
-        font-weight: 700;
-        color: var(--text-primary);
-      }
-
-      .transparency-val.accent {
-        color: #38bdf8;
-      }
-
-      .adapter-log-msg {
-        font-size: 11px;
-        font-family: var(--font-mono);
-        color: var(--text-muted);
-        border-top: 1px dashed #1e293b;
-        padding-top: 6px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
       }
 
       /* ==========================================================================
@@ -1260,132 +870,6 @@
             <button class="btn-chip" type="button" onclick="setRiver(92)">92% Evacuação</button>
             <button class="btn-chip" type="button" onclick="setRiver(120)">120% Crítico</button>
           </div>
-
-          <!-- MÓDULO ADAPTADOR DE TELEMETRIA E CONVERSÃO (METROS PARA %) -->
-          <div class="adapter-box">
-            <div class="adapter-header">
-              <div class="adapter-title-group">
-                <span class="adapter-title">Módulo Adaptador de Telemetria</span>
-                <span class="adapter-tag">Padrão Adapter</span>
-              </div>
-              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">Calha do Rio: 5.00m = 100%</span>
-            </div>
-
-            <!-- CONEXÃO API EM TEMPO REAL (RIO LENÇÓIS) -->
-            <div class="api-live-card">
-              <div class="api-live-header">
-                <div class="api-live-status-group">
-                  <span class="api-live-dot" id="apiLiveDot" title="Status da Conexão com API"></span>
-                  <div>
-                    <div class="api-live-title">Verificação da API em Tempo Real</div>
-                    <div class="api-live-station">Estação LP-FLUV-01 • Rio Lençóis (-22.5989, -48.7997) • CBH-TJ</div>
-                  </div>
-                </div>
-                <div class="api-live-actions">
-                  <button class="btn-api-sync" type="button" id="btnSyncApi" title="Consultar API em tempo real agora">
-                    <span id="syncIcon">↻</span> Consultar API
-                  </button>
-                  <button class="btn-auto-toggle" type="button" id="btnAutoSync" title="Ativar verificação automática a cada 30 segundos">
-                    <span class="auto-indicator"></span> Auto-Sync: <strong id="autoSyncStatusText">OFF</strong>
-                  </button>
-                </div>
-              </div>
-
-              <!-- MÉTRICAS RECEBIDAS DA API -->
-              <div class="api-live-metrics">
-                <div class="api-metric-item">
-                  <span class="api-metric-lbl">Nível do Sensor</span>
-                  <span class="api-metric-val accent" id="apiMetricNivel">-- m</span>
-                </div>
-                <div class="api-metric-item">
-                  <span class="api-metric-lbl">Calha Estimada</span>
-                  <span class="api-metric-val" id="apiMetricPct">-- %</span>
-                </div>
-                <div class="api-metric-item">
-                  <span class="api-metric-lbl">Vazão do Rio</span>
-                  <span class="api-metric-val" id="apiMetricVazao">-- m³/s</span>
-                </div>
-                <div class="api-metric-item">
-                  <span class="api-metric-lbl">Precipitação</span>
-                  <span class="api-metric-val" id="apiMetricChuva">-- mm</span>
-                </div>
-                <div class="api-metric-item">
-                  <span class="api-metric-lbl">Última Checagem</span>
-                  <span class="api-metric-val" id="apiMetricHora" style="font-size: 11px; color: var(--text-muted);">Aguardando...</span>
-                </div>
-              </div>
-
-              <!-- CONTROLE DE ENDPOINT CUSTOMIZADO (EXPANSÍVEL) -->
-              <div class="api-custom-toggle-row">
-                <button type="button" class="btn-text-link" id="btnToggleCustomApi">
-                  ⚙ Configurar Endpoint Customizado (ANA / CEMADEN / IoT)
-                </button>
-              </div>
-
-              <div class="api-custom-panel" id="apiCustomPanel" style="display: none;">
-                <div class="api-custom-input-wrap">
-                  <input 
-                    type="text" 
-                    class="adapter-input" 
-                    id="inputCustomApiUrl" 
-                    placeholder="https://api.snirh.gov.br/... ou /api/telemetria/rio-lencois" 
-                    value="/api/telemetria/rio-lencois"
-                    aria-label="URL da API de Telemetria"
-                  />
-                  <button class="btn-sensor-chip" type="button" id="btnSalvarCustomApi">Salvar & Testar</button>
-                </div>
-                <div class="api-custom-hint">
-                  Usando rota nativa <code>/api/telemetria/rio-lencois</code> integrada aos dados hidrológicos e pluviométricos reais de Lençóis Paulista.
-                </div>
-              </div>
-            </div>
-
-            <!-- ENTRADA DE SIMULAÇÃO DE API EXTERNA -->
-            <div class="adapter-input-group">
-              <div class="adapter-input-wrap">
-                <input 
-                  type="number" 
-                  class="adapter-input" 
-                  id="inputSensorMetros" 
-                  step="0.01" 
-                  min="0" 
-                  max="10" 
-                  placeholder="Simular Leitura Manual de API (metros)" 
-                  value="3.75"
-                  aria-label="Simular Leitura Manual de API (metros)"
-                />
-                <span class="adapter-unit-suffix">m</span>
-              </div>
-              <button class="btn-adapter-process" type="button" id="btnProcessarSensor">
-                <span>⚙</span> Processar Dado Bruto
-              </button>
-            </div>
-
-            <!-- PAINEL DE TRANSPARÊNCIA DA CONVERSÃO PARA O OPERADOR -->
-            <div class="adapter-transparency-card">
-              <div class="transparency-grid">
-                <div class="transparency-item">
-                  <span class="transparency-label">Leitura Original</span>
-                  <span class="transparency-val" id="transparencyRawMeters">1.75 m</span>
-                </div>
-                <div class="transparency-item">
-                  <span class="transparency-label">Calha Máxima</span>
-                  <span class="transparency-val">5.00 m</span>
-                </div>
-                <div class="transparency-item">
-                  <span class="transparency-label">Fórmula Aplicada</span>
-                  <span class="transparency-val" style="font-size: 11px; color: var(--text-secondary);">(Metros / 5.0m) × 100</span>
-                </div>
-                <div class="transparency-item">
-                  <span class="transparency-label">Percentual Convertido</span>
-                  <span class="transparency-val accent" id="transparencyConvertedPct">35.0%</span>
-                </div>
-              </div>
-              <div class="adapter-log-msg" id="transparencyStatusMsg">
-                <span>●</span> <span>Módulo Adaptador sincronizado com o leito do Rio Lençóis.</span>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -1431,25 +915,10 @@
             </button>
           </div>
 
-          <!-- ÁUDIO OFICIAL DA SIRENE & CONTROLES -->
-          <div class="siren-audio-card">
-            <div class="audio-card-header">
-              <span>ÁUDIO DA SIRENE</span>
-              <span class="audio-file-badge" id="audioFileName" title="sirene-lencois.mp3">sirene-lencois.mp3</span>
-            </div>
-            <div class="audio-card-controls">
-              <button type="button" class="btn-audio-action" id="btnTestAudio" title="Ouvir prévia do áudio">
-                <span id="testAudioIcon">▶</span>
-                <span id="testAudioLabel">Ouvir Teste</span>
-              </button>
-              <label class="btn-audio-action" style="cursor: pointer;" title="Carregar outro arquivo de áudio do computador">
-                <span>📁 Trocar Áudio</span>
-                <input type="file" id="audioFileInput" accept="audio/*" style="display: none;" />
-              </label>
-              <button type="button" class="btn-audio-action" id="btnResetAudio" title="Restaurar áudio padrão">
-                <span>↺ Padrão</span>
-              </button>
-            </div>
+          <!-- ÁUDIO OFICIAL DEFINITIVO DA DEFESA CIVIL -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-top: 1px dashed #1e293b; margin-top: 4px;">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">Áudio oficial: Defesa Civil (sirene-lencois.mp3)</span>
+            <button type="button" class="btn-text-link" id="btnTestAudio" title="Ouvir teste da sirene oficial (5 segundos)">▶ Testar Áudio Oficial (5s)</button>
           </div>
 
           <!-- BOTÃO PARA SILENCIAR -->
@@ -1458,8 +927,8 @@
           </button>
         </div>
 
-        <!-- ELEMENTO DE ÁUDIO HTML5 EMBUTIDO -->
-        <audio id="sirenAudio" preload="auto" loop>
+        <!-- ELEMENTO DE ÁUDIO HTML5 EMBUTIDO (ÁUDIO OFICIAL ENVIADO) -->
+        <audio id="sirenAudio" src="/siren.mp3" preload="auto" loop>
           <source src="/siren.mp3" type="audio/mpeg" />
           <source src="/siren.wav" type="audio/wav" />
         </audio>
@@ -1563,18 +1032,7 @@
       const clockDisplay = document.getElementById('clockDisplay');
 
       const sirenAudio = document.getElementById('sirenAudio');
-      const audioFileName = document.getElementById('audioFileName');
       const btnTestAudio = document.getElementById('btnTestAudio');
-      const testAudioIcon = document.getElementById('testAudioIcon');
-      const testAudioLabel = document.getElementById('testAudioLabel');
-      const audioFileInput = document.getElementById('audioFileInput');
-      const btnResetAudio = document.getElementById('btnResetAudio');
-
-      const inputSensorMetros = document.getElementById('inputSensorMetros');
-      const btnProcessarSensor = document.getElementById('btnProcessarSensor');
-      const transparencyRawMeters = document.getElementById('transparencyRawMeters');
-      const transparencyConvertedPct = document.getElementById('transparencyConvertedPct');
-      const transparencyStatusMsg = document.getElementById('transparencyStatusMsg');
 
       // 5. RELÓGIO OPERACIONAL
       function updateClock() {
@@ -1620,90 +1078,8 @@
       }
 
       // =========================================================================
-      // 8. PADRÃO ADAPTER: MÓDULO ADAPTADOR DE TELEMETRIA (METROS PARA %)
+      // 8. ATUALIZADOR DO ESTADO DO RIO LENÇÓIS
       // =========================================================================
-      /**
-       * Função Adaptadora conforme especificação:
-       * - Recebe o valor bruto da medição em metros (ex: 3.75m).
-       * - Aplica a fórmula de conversão: (Nível Atual em Metros / Calha Máxima em Metros) * 100.
-       * - Envia o valor percentual calculado para a função principal atualizarNivelRio.
-       */
-      function converterMetrosParaPercentual(nivelEmMetros) {
-        const metros = typeof nivelEmMetros === 'number'
-          ? nivelEmMetros
-          : parseFloat(String(nivelEmMetros).replace(',', '.'));
-
-        if (isNaN(metros) || metros < 0) {
-          throw new Error('Valor inválido. A medição em metros deve ser um número não negativo.');
-        }
-
-        // Fórmula oficial: (Nível Atual em Metros / Calha Máxima em Metros) * 100
-        const percentual = (metros / CALHA_RIO_METROS) * 100;
-        return percentual;
-      }
-
-      /**
-       * Classe Adapter conforme o Padrão de Projeto GoF (Adapter Pattern).
-       * Adapta payloads heterogêneos de sensores hidrológicos (ANA, CEMADEN, IoT)
-       * para a interface operacional da Sala de Crise.
-       */
-      class TelemetriaAdapter {
-        constructor(calhaMaxima = CALHA_RIO_METROS) {
-          this.calhaMaxima = calhaMaxima;
-        }
-
-        converter(nivelEmMetros) {
-          return converterMetrosParaPercentual(nivelEmMetros);
-        }
-
-        processarDadoBruto(dadoBruto, fonte = 'Sensor Externo') {
-          let metros = 0;
-          if (typeof dadoBruto === 'number') {
-            metros = dadoBruto;
-          } else if (typeof dadoBruto === 'string') {
-            metros = parseFloat(dadoBruto.replace(',', '.'));
-          } else if (dadoBruto && typeof dadoBruto.leituraMetros === 'number') {
-            metros = dadoBruto.leituraMetros;
-          } else if (dadoBruto && typeof dadoBruto.cota === 'number') {
-            metros = dadoBruto.cota;
-          } else {
-            metros = parseFloat(dadoBruto);
-          }
-
-          if (isNaN(metros) || metros < 0) {
-            throw new Error(`Leitura bruta inválida [${dadoBruto}]. Deve ser um valor numérico em metros.`);
-          }
-
-          // Executa a conversão via adapter
-          const percentual = this.converter(metros);
-
-          // Atualiza transparência para o operador
-          if (transparencyRawMeters) transparencyRawMeters.textContent = `${metros.toFixed(2)} m`;
-          if (transparencyConvertedPct) transparencyConvertedPct.textContent = `${percentual.toFixed(1)}%`;
-          if (transparencyStatusMsg) {
-            transparencyStatusMsg.innerHTML = `<span style="color: #10b981;">●</span> <span>Dado bruto de <strong>${metros.toFixed(2)}m</strong> (${fonte}) adaptado com sucesso para <strong>${percentual.toFixed(1)}%</strong> da calha.</span>`;
-          }
-
-          // Envia o valor percentual calculado para a função principal de atualização do estado da Sala de Crise
-          atualizarNivelRio(percentual, true, `ADAPTER [${fonte}]: Leitura bruta ${metros.toFixed(2)}m adaptada para ${percentual.toFixed(1)}%`);
-
-          return {
-            metrosOriginal: metros,
-            percentualConvertido: percentual,
-            calhaMaxima: this.calhaMaxima,
-            fonte
-          };
-        }
-      }
-
-      const telemetriaAdapter = new TelemetriaAdapter(CALHA_RIO_METROS);
-
-      // Função principal de atualização do estado da Sala de Crise
-      function atualizarNivelRio(val, logChange = true, customMsg = null) {
-        setRiver(val, logChange, customMsg);
-      }
-
-      // 8.1 ATUALIZADOR DO ESTADO DO RIO
       function setRiver(val, logChange = true, customMsg = null) {
         const prev = riverLevel;
         riverLevel = Math.max(0, Math.min(150, Math.round(val)));
@@ -1713,10 +1089,6 @@
         // Cota em metros oficial calculada: (Percentual / 100) * CALHA_RIO_METROS
         const meters = ((riverLevel / 100) * CALHA_RIO_METROS).toFixed(2);
         cotaMeters.textContent = `${meters} m`;
-
-        // Sincroniza painel de transparência do Adapter
-        if (transparencyRawMeters) transparencyRawMeters.textContent = `${meters} m`;
-        if (transparencyConvertedPct) transparencyConvertedPct.textContent = `${riverLevel.toFixed(1)}%`;
 
         // Gauge: 0% a 150% mapeado para 0 a 100% da barra
         const gaugePct = Math.min(100, (riverLevel / 150) * 100);
@@ -1755,201 +1127,12 @@
           if (customMsg) {
             addLog(customMsg);
           } else if (Math.abs(prev - riverLevel) >= 5) {
-            addLog(`Telemetria ajustada: Rio Lençóis em ${riverLevel}% (${risk.title}) • Cota ${meters}m`);
+            addLog(`Nível do Rio Lençóis ajustado para ${riverLevel}% (${risk.title}) • Cota ${meters}m`);
           }
         }
       }
 
-      // =========================================================================
-      // 8.2 CONECTOR DE API EM TEMPO REAL (RIO LENÇÓIS)
-      // =========================================================================
-      let apiUrl = '/api/telemetria/rio-lencois';
-      let autoSyncInterval = null;
-      let isFetchingApi = false;
-
-      const apiLiveDot = document.getElementById('apiLiveDot');
-      const btnSyncApi = document.getElementById('btnSyncApi');
-      const syncIcon = document.getElementById('syncIcon');
-      const btnAutoSync = document.getElementById('btnAutoSync');
-      const autoSyncStatusText = document.getElementById('autoSyncStatusText');
-      const apiMetricNivel = document.getElementById('apiMetricNivel');
-      const apiMetricPct = document.getElementById('apiMetricPct');
-      const apiMetricVazao = document.getElementById('apiMetricVazao');
-      const apiMetricChuva = document.getElementById('apiMetricChuva');
-      const apiMetricHora = document.getElementById('apiMetricHora');
-      const btnToggleCustomApi = document.getElementById('btnToggleCustomApi');
-      const apiCustomPanel = document.getElementById('apiCustomPanel');
-      const inputCustomApiUrl = document.getElementById('inputCustomApiUrl');
-      const btnSalvarCustomApi = document.getElementById('btnSalvarCustomApi');
-
-      async function consultarApiTempoReal(isAutomated = false) {
-        if (isFetchingApi) return;
-        isFetchingApi = true;
-
-        if (apiLiveDot) {
-          apiLiveDot.className = 'api-live-dot syncing';
-        }
-        if (syncIcon) {
-          syncIcon.style.display = 'inline-block';
-          syncIcon.style.animation = 'spin 0.8s linear infinite';
-        }
-        if (btnSyncApi) btnSyncApi.disabled = true;
-
-        try {
-          let responseData = null;
-          let fetchUrl = (apiUrl || '/api/telemetria/rio-lencois').trim();
-
-          // 1. Tenta consulta ao endpoint local ou configurado
-          try {
-            const res = await fetch(fetchUrl);
-            if (res.ok) {
-              responseData = await res.json();
-            }
-          } catch (err) {
-            console.warn('Endpoint primário indisponível, acionando fallback hidrológico direto:', err);
-          }
-
-          // 2. Fallback direto caso endpoint não responda (ex: preview sem server proxy)
-          if (!responseData || !responseData.telemetria) {
-            const lat = -22.5989;
-            const lon = -48.7997;
-            const [fRes, wRes] = await Promise.all([
-              fetch(`https://flood-api.open-meteo.com/v1/flood?latitude=${lat}&longitude=${lon}&daily=river_discharge&forecast_days=1`),
-              fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=precipitation,rain,temperature_2m&timezone=America%2FSao_Paulo`)
-            ]);
-
-            let discharge = 4.31;
-            let rain = 0.0;
-            if (fRes.ok) {
-              const fJson = await fRes.json();
-              if (fJson.daily?.river_discharge?.[0] != null) {
-                discharge = Number(fJson.daily.river_discharge[0]);
-              }
-            }
-            if (wRes.ok) {
-              const wJson = await wRes.json();
-              if (wJson.current) {
-                rain = wJson.current.rain ?? wJson.current.precipitation ?? 0.0;
-              }
-            }
-
-            const nivelMetros = Number((1.25 + Math.pow(discharge / 2.8, 0.46) * 0.62 + (rain * 0.12)).toFixed(2));
-            const percentual = Number(((nivelMetros / CALHA_RIO_METROS) * 100).toFixed(1));
-
-            responseData = {
-              status: 'online',
-              sucesso: true,
-              fonte: 'API Open-Meteo Flood (Lençóis Paulista)',
-              telemetria: {
-                timestamp: new Date().toISOString(),
-                nivelMetros,
-                percentualCalha: percentual,
-                vazaoM3s: Number(discharge.toFixed(2)),
-                chuvaAtualMm: Number(rain.toFixed(1)),
-                statusConexao: 'ONLINE_FALLBACK'
-              }
-            };
-          }
-
-          const tel = responseData.telemetria;
-          const nivel = Number(tel.nivelMetros);
-          const vazao = tel.vazaoM3s != null ? Number(tel.vazaoM3s) : 0;
-          const chuva = tel.chuvaAtualMm != null ? Number(tel.chuvaAtualMm) : 0;
-          const pctCalc = ((nivel / CALHA_RIO_METROS) * 100).toFixed(1);
-
-          // Atualiza dados na interface de telemetria
-          if (apiMetricNivel) apiMetricNivel.textContent = `${nivel.toFixed(2)} m`;
-          if (apiMetricPct) apiMetricPct.textContent = `${pctCalc}%`;
-          if (apiMetricVazao) apiMetricVazao.textContent = `${vazao.toFixed(2)} m³/s`;
-          if (apiMetricChuva) apiMetricChuva.textContent = `${chuva.toFixed(1)} mm`;
-          if (apiMetricHora) {
-            apiMetricHora.textContent = new Date().toLocaleTimeString('pt-BR');
-          }
-
-          if (inputSensorMetros) {
-            inputSensorMetros.value = nivel.toFixed(2);
-          }
-
-          // Despacha para o adaptador da Sala de Crise
-          const fonteDesc = responseData.fonte || 'API Tempo Real Estação Lençóis';
-          telemetriaAdapter.processarDadoBruto(nivel, fonteDesc);
-
-          if (apiLiveDot) {
-            apiLiveDot.className = 'api-live-dot';
-          }
-
-          if (!isAutomated) {
-            addLog(`API TELEMETRIA: Verificação em tempo real concluída com sucesso. Nível: ${nivel.toFixed(2)}m (${pctCalc}%), Vazão: ${vazao.toFixed(1)} m³/s, Chuva: ${chuva.toFixed(1)} mm.`);
-          }
-        } catch (fetchErr) {
-          console.error('Erro na chamada da API:', fetchErr);
-          if (apiLiveDot) apiLiveDot.className = 'api-live-dot error';
-          if (apiMetricHora) apiMetricHora.textContent = 'Erro de Conexão';
-          addLog(`ERRO API: Falha ao verificar telemetria: ${fetchErr.message}`, true);
-        } finally {
-          isFetchingApi = false;
-          if (btnSyncApi) btnSyncApi.disabled = false;
-          if (syncIcon) {
-            syncIcon.style.animation = 'none';
-          }
-        }
-      }
-
-      function toggleAutoSync() {
-        if (autoSyncInterval) {
-          clearInterval(autoSyncInterval);
-          autoSyncInterval = null;
-          if (btnAutoSync) btnAutoSync.classList.remove('active');
-          if (autoSyncStatusText) autoSyncStatusText.textContent = 'OFF';
-          addLog('Sincronização contínua com a API desativada pelo operador.');
-        } else {
-          consultarApiTempoReal(true);
-          autoSyncInterval = setInterval(() => {
-            consultarApiTempoReal(true);
-          }, 30000);
-          if (btnAutoSync) btnAutoSync.classList.add('active');
-          if (autoSyncStatusText) autoSyncStatusText.textContent = 'ON (30s)';
-          addLog('Sincronização contínua com a API ativada (verificação a cada 30 segundos).');
-        }
-      }
-
-      // Eventos da API em Tempo Real
-      if (btnSyncApi) {
-        btnSyncApi.addEventListener('click', () => consultarApiTempoReal(false));
-      }
-
-      if (btnAutoSync) {
-        btnAutoSync.addEventListener('click', toggleAutoSync);
-      }
-
-      if (btnToggleCustomApi && apiCustomPanel) {
-        btnToggleCustomApi.addEventListener('click', () => {
-          const isHidden = apiCustomPanel.style.display === 'none';
-          apiCustomPanel.style.display = isHidden ? 'flex' : 'none';
-          btnToggleCustomApi.textContent = isHidden 
-            ? '▲ Ocultar Configuração de Endpoint' 
-            : '⚙ Configurar Endpoint Customizado (ANA / CEMADEN / IoT)';
-        });
-      }
-
-      if (btnSalvarCustomApi && inputCustomApiUrl) {
-        btnSalvarCustomApi.addEventListener('click', () => {
-          const val = inputCustomApiUrl.value.trim();
-          if (val) {
-            apiUrl = val;
-            addLog(`CONFIGURAÇÃO: Novo endpoint de API definido [${apiUrl}]. Testando conexão...`);
-            consultarApiTempoReal(false);
-          }
-        });
-
-        inputCustomApiUrl.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            btnSalvarCustomApi.click();
-          }
-        });
-      }
-
-      // 9. CONTROLES RÁPIDOS & EVENT LISTENERS DO ADAPTADOR
+      // 9. CONTROLES RÁPIDOS & EVENT LISTENERS
       riverRange.addEventListener('input', (e) => setRiver(Number(e.target.value), false));
       riverRange.addEventListener('change', (e) => setRiver(Number(e.target.value), true));
 
@@ -1957,35 +1140,6 @@
       document.getElementById('btnMinus5').onclick = () => setRiver(riverLevel - 5);
       document.getElementById('btnPlus5').onclick = () => setRiver(riverLevel + 5);
       document.getElementById('btnPlus20').onclick = () => setRiver(riverLevel + 20);
-
-      // Eventos do Módulo Adaptador
-      btnProcessarSensor.addEventListener('click', () => {
-        const val = inputSensorMetros.value;
-        if (!val || isNaN(parseFloat(val))) {
-          transparencyStatusMsg.innerHTML = `<span style="color: #ef4444;">●</span> <span style="color: #f87171;">Informe um valor numérico em metros válido (ex: 3.75).</span>`;
-          return;
-        }
-        try {
-          telemetriaAdapter.processarDadoBruto(val, 'Simulação de Entrada Manual');
-        } catch (err) {
-          transparencyStatusMsg.innerHTML = `<span style="color: #ef4444;">●</span> <span style="color: #f87171;">Erro no adaptador: ${err.message}</span>`;
-        }
-      });
-
-      inputSensorMetros.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          btnProcessarSensor.click();
-        }
-      });
-
-      window.simularSensor = function(metros, fonte) {
-        inputSensorMetros.value = Number(metros).toFixed(2);
-        try {
-          telemetriaAdapter.processarDadoBruto(metros, fonte);
-        } catch (err) {
-          console.warn(err);
-        }
-      };
 
       document.getElementById('btnClearAudit').onclick = () => {
         auditList.innerHTML = '';
@@ -2028,9 +1182,10 @@
       function startTestAudio() {
         if (isSireneActive) return;
         isAudioTesting = true;
-        btnTestAudio.classList.add('playing');
-        testAudioIcon.textContent = '⏹';
-        testAudioLabel.textContent = 'Parar (5s)';
+        if (btnTestAudio) {
+          btnTestAudio.classList.add('playing');
+          btnTestAudio.textContent = '⏹ Parar Teste (5s)';
+        }
 
         if (sirenAudio) {
           sirenAudio.currentTime = 0;
@@ -2050,9 +1205,10 @@
       function stopTestAudio() {
         isAudioTesting = false;
         clearTimeout(testAudioTimer);
-        btnTestAudio.classList.remove('playing');
-        testAudioIcon.textContent = '▶';
-        testAudioLabel.textContent = 'Ouvir Teste';
+        if (btnTestAudio) {
+          btnTestAudio.classList.remove('playing');
+          btnTestAudio.textContent = '▶ Testar Áudio Oficial (5s)';
+        }
         if (!isSireneActive && sirenAudio) {
           sirenAudio.pause();
           sirenAudio.currentTime = 0;
@@ -2060,33 +1216,15 @@
         stopAudioSiren();
       }
 
-      btnTestAudio.addEventListener('click', () => {
-        if (isAudioTesting) {
-          stopTestAudio();
-        } else {
-          startTestAudio();
-        }
-      });
-
-      audioFileInput.addEventListener('change', (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (file) {
-          stopTestAudio();
-          const fileUrl = URL.createObjectURL(file);
-          sirenAudio.src = fileUrl;
-          audioFileName.textContent = file.name;
-          audioFileName.title = file.name;
-          addLog(`CONFIGURAÇÃO DE ÁUDIO: Arquivo personalizado carregado (${file.name}).`);
-        }
-      });
-
-      btnResetAudio.addEventListener('click', () => {
-        stopTestAudio();
-        sirenAudio.src = '/siren.mp3';
-        audioFileName.textContent = 'sirene-lencois.mp3';
-        audioFileName.title = 'sirene-lencois.mp3';
-        addLog('CONFIGURAÇÃO DE ÁUDIO: Restaurado áudio oficial padrão da Defesa Civil.');
-      });
+      if (btnTestAudio) {
+        btnTestAudio.addEventListener('click', () => {
+          if (isAudioTesting) {
+            stopTestAudio();
+          } else {
+            startTestAudio();
+          }
+        });
+      }
 
       function startAudioSiren() {
         try {
@@ -2302,8 +1440,6 @@
       // 13. INICIALIZAÇÃO
       setRiver(35, false);
       addLog('Sistema inicializado. Monitoramento da Calha do Rio Lençóis operacional.');
-      addLog('MÓDULO ADAPTADOR: Ativo (Calha Máxima = 5.00m). Suporte a telemetria externa habilitado.');
-      consultarApiTempoReal(true);
     </script>
   </body>
 </html>
