@@ -74,6 +74,23 @@
         gap: 12px;
       }
 
+      .official-defesa-logo {
+        height: 42px;
+        max-width: 150px;
+        object-fit: contain;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2px 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: block;
+      }
+
+      .brand-divider {
+        width: 1px;
+        height: 30px;
+        background: var(--border);
+      }
+
       .brand-badge {
         background: #1e293b;
         color: #38bdf8;
@@ -196,11 +213,20 @@
         justify-content: center;
       }
 
+      .river-hero-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+
       .river-metric-wrap {
         display: flex;
         align-items: baseline;
         gap: 8px;
-        margin-bottom: 8px;
+        margin-bottom: 0;
       }
 
       .river-pct-value {
@@ -218,6 +244,213 @@
         font-family: var(--font-mono);
         color: var(--text-muted);
         font-weight: 500;
+      }
+
+      /* ==========================================================================
+         IMAGEM DINÂMICA DA COLUNA / NÍVEL DA ÁGUA NA CALHA
+         ========================================================================== */
+      .water-level-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #090e15;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 10px;
+        gap: 6px;
+        min-width: 146px;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+      }
+
+      .water-tank-wrapper {
+        display: flex;
+        align-items: stretch;
+        gap: 6px;
+        width: 100%;
+        height: 78px;
+      }
+
+      .water-ruler-ticks {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--text-muted);
+        line-height: 1;
+        padding: 2px 0;
+        user-select: none;
+        text-align: right;
+        min-width: 28px;
+      }
+
+      .water-tick-mark {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 3px;
+      }
+
+      .water-tick-mark::after {
+        content: '';
+        display: inline-block;
+        width: 4px;
+        height: 1px;
+        background: #334155;
+      }
+
+      .water-tick-mark.tick-100 {
+        color: #f87171;
+        font-weight: 700;
+      }
+
+      .water-tick-mark.tick-100::after {
+        background: #ef4444;
+        width: 6px;
+      }
+
+      .water-tank-glass {
+        flex: 1;
+        position: relative;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 6px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+      }
+
+      .water-overflow-line {
+        position: absolute;
+        bottom: 66.66%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        border-top: 1px dashed rgba(239, 68, 68, 0.75);
+        z-index: 5;
+        pointer-events: none;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .overflow-tag {
+        font-family: var(--font-mono);
+        font-size: 7px;
+        font-weight: 700;
+        color: #f87171;
+        background: rgba(127, 29, 29, 0.85);
+        padding: 0 3px;
+        border-radius: 2px;
+        transform: translateY(-50%);
+        margin-right: 2px;
+        letter-spacing: 0.3px;
+      }
+
+      .water-liquid-column {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: height 0.22s ease-out, background 0.3s ease;
+        background: linear-gradient(180deg, #38bdf8 0%, #0284c7 45%, #0369a1 100%);
+        color: #38bdf8;
+        box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.4);
+        z-index: 2;
+      }
+
+      .water-wave-surface {
+        position: absolute;
+        top: -6px;
+        left: 0;
+        right: 0;
+        height: 8px;
+        overflow: hidden;
+      }
+
+      .water-wave-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+      }
+
+      .water-wave-svg.wave-back {
+        opacity: 0.45;
+        fill: currentColor;
+        animation: waveFlow 2.8s linear infinite;
+      }
+
+      .water-wave-svg.wave-front {
+        opacity: 0.75;
+        fill: currentColor;
+        animation: waveFlow 1.6s linear infinite reverse;
+      }
+
+      @keyframes waveFlow {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      .water-liquid-body {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      .water-bubble {
+        position: absolute;
+        bottom: -4px;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+        animation: bubbleFloat 2.5s infinite ease-in;
+      }
+
+      .water-bubble.b1 { left: 30%; animation-delay: 0.4s; }
+      .water-bubble.b2 { left: 70%; animation-delay: 1.2s; }
+
+      @keyframes bubbleFloat {
+        0% { transform: translateY(0) scale(1); opacity: 0; }
+        30% { opacity: 0.7; }
+        100% { transform: translateY(-40px) scale(1.4); opacity: 0; }
+      }
+
+      .water-level-float-badge {
+        position: absolute;
+        right: 4px;
+        transform: translateY(50%);
+        background: rgba(15, 23, 42, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        padding: 1px 4px;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 700;
+        color: #ffffff;
+        z-index: 6;
+        transition: bottom 0.22s ease-out;
+        pointer-events: none;
+        white-space: nowrap;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .water-tank-caption {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+      }
+
+      .water-caption-icon {
+        font-size: 12px;
+        color: #38bdf8;
       }
 
       .risk-pill {
@@ -504,7 +737,43 @@
         overflow: hidden;
         user-select: none;
         touch-action: none;
-        transition: border 0.2s, background 0.2s;
+        transition: border 0.2s, background 0.2s, opacity 0.2s;
+      }
+
+      .slide-container.locked-disabled {
+        opacity: 0.55;
+        background: #070a0e;
+        border: 1px dashed #1e293b;
+        cursor: not-allowed;
+      }
+
+      .slide-container.locked-disabled .slide-handle {
+        background: #1e293b;
+        color: #64748b;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .slide-container.locked-disabled .slide-text {
+        color: #64748b;
+        font-size: 11px;
+        padding-left: 24px;
+      }
+
+      .siren-panel.evacuation-ready {
+        border-color: rgba(239, 68, 68, 0.5);
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.12);
+      }
+
+      .siren-panel.evacuation-ready .slide-container:not(.locked-disabled):not(.armed) {
+        border-color: #ef4444;
+        border-style: solid;
+        animation: pulseBorder 2.2s infinite ease-in-out;
+      }
+
+      @keyframes pulseBorder {
+        0%, 100% { border-color: rgba(239, 68, 68, 0.45); }
+        50% { border-color: rgba(239, 68, 68, 0.95); }
       }
 
       .slide-container.armed {
@@ -770,9 +1039,19 @@
       ALERTA DE EVACUAÇÃO EM ANDAMENTO | MORADORES EM ÁREAS DE RISCO DEVEM EVACUAR
     </div>
 
-    <!-- CABEÇALHO LIMPO -->
+    <!-- CABEÇALHO LIMPO COM LOGO OFICIAL SEDEC / DEFESA CIVIL -->
     <header class="topbar">
       <div class="topbar-brand">
+        <img 
+          src="https://www.gov.br/mdr/pt-br/assuntos/protecao-e-defesa-civil/defesa-civil/marca_sedec.png" 
+          alt="Defesa Civil Nacional - SEDEC" 
+          class="official-defesa-logo"
+          id="officialDefesaLogo"
+          referrerpolicy="no-referrer"
+          onerror="this.onerror=null; this.src='/assets/defesa-civil-logo.svg';"
+          title="Defesa Civil - Secretaria Nacional de Proteção e Defesa Civil (SEDEC/MIDR)"
+        />
+        <div class="brand-divider"></div>
         <span class="brand-badge">SALA DE CRISE</span>
         <div>
           <div class="brand-title">Prefeitura de Lençóis Paulista</div>
@@ -800,9 +1079,59 @@
             <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);" id="cotaMeters">2.28 m</span>
           </div>
 
-          <div class="river-metric-wrap">
-            <span class="river-pct-value" id="riverLevelNum">35</span>
-            <span class="river-pct-unit">%</span>
+          <div class="river-hero-row">
+            <div class="river-metric-wrap">
+              <span class="river-pct-value" id="riverLevelNum">35</span>
+              <span class="river-pct-unit">%</span>
+            </div>
+
+            <!-- IMAGEM DINÂMICA DO NÍVEL DA ÁGUA NA CALHA -->
+            <div class="water-level-card" id="waterLevelCard" title="Representação dinâmica da cota e coluna d'água na calha do Rio Lençóis">
+              <div class="water-tank-wrapper">
+                <!-- Escala vertical linimétrica -->
+                <div class="water-ruler-ticks">
+                  <div class="water-tick-mark tick-150" title="150% - Inundação Crítica"><span>150%</span></div>
+                  <div class="water-tick-mark tick-100" title="100% - Limite da Calha (5.00m)"><span>100%</span></div>
+                  <div class="water-tick-mark tick-50" title="50% - Cota Atenção (2.50m)"><span>50%</span></div>
+                  <div class="water-tick-mark tick-0" title="0% - Leito Base"><span>0%</span></div>
+                </div>
+
+                <!-- Tanque com água líquida dinâmica -->
+                <div class="water-tank-glass">
+                  <!-- Linha de transbordo (100% = 5.0m) -->
+                  <div class="water-overflow-line" title="Limite de Transbordo (5.00m)">
+                    <span class="overflow-tag">TRANSBORDO</span>
+                  </div>
+
+                  <!-- Coluna de água líquida dinâmica -->
+                  <div class="water-liquid-column" id="waterLiquidColumn" style="height: 23.33%;">
+                    <!-- Superfície com ondas animadas -->
+                    <div class="water-wave-surface" id="waterWaveSurface">
+                      <svg class="water-wave-svg wave-back" viewBox="0 0 120 12" preserveAspectRatio="none">
+                        <path d="M0,6 C30,12 60,0 90,6 C120,12 150,0 180,6 L180,12 L0,12 Z"></path>
+                      </svg>
+                      <svg class="water-wave-svg wave-front" viewBox="0 0 120 12" preserveAspectRatio="none">
+                        <path d="M0,6 C30,0 60,12 90,6 C120,0 150,12 180,6 L180,12 L0,12 Z"></path>
+                      </svg>
+                    </div>
+                    <!-- Brilho e bolhas na água -->
+                    <div class="water-liquid-body">
+                      <span class="water-bubble b1"></span>
+                      <span class="water-bubble b2"></span>
+                    </div>
+                  </div>
+
+                  <!-- Indicador flutuante de cota -->
+                  <div class="water-level-float-badge" id="waterFloatBadge" style="bottom: 23.33%;">
+                    <span id="waterFloatText">1.75m</span>
+                  </div>
+                </div>
+              </div>
+              <div class="water-tank-caption">
+                <span class="water-caption-icon">〰</span>
+                <span id="waterStateLabel">Calha Normal</span>
+              </div>
+            </div>
           </div>
 
           <div class="risk-pill normal" id="riskBadge">
@@ -1019,6 +1348,12 @@
       const blockedCount = document.getElementById('blockedCount');
       const evacuationBanner = document.getElementById('evacuationBanner');
 
+      // Elementos do Módulo Dinâmico de Nível da Água
+      const waterLiquidColumn = document.getElementById('waterLiquidColumn');
+      const waterFloatBadge = document.getElementById('waterFloatBadge');
+      const waterFloatText = document.getElementById('waterFloatText');
+      const waterStateLabel = document.getElementById('waterStateLabel');
+
       const slideTrack = document.getElementById('slideTrack');
       const slideHandle = document.getElementById('slideHandle');
       const slideText = document.getElementById('slideText');
@@ -1099,6 +1434,40 @@
         riverLevelNum.style.color = risk.color;
         gaugeBar.style.backgroundColor = risk.color;
 
+        // Atualização da imagem/gráfico dinâmico do nível da água
+        const visualHeightPct = Math.min(100, Math.max(5, (riverLevel / 150) * 100));
+        if (waterLiquidColumn) {
+          waterLiquidColumn.style.height = `${visualHeightPct}%`;
+
+          if (riverLevel < 50) {
+            waterLiquidColumn.style.background = 'linear-gradient(180deg, #38bdf8 0%, #0284c7 45%, #0369a1 100%)';
+            waterLiquidColumn.style.color = '#38bdf8';
+            if (waterStateLabel) waterStateLabel.textContent = 'Calha Normal';
+          } else if (riverLevel < 75) {
+            waterLiquidColumn.style.background = 'linear-gradient(180deg, #fbbf24 0%, #d97706 45%, #b45309 100%)';
+            waterLiquidColumn.style.color = '#fbbf24';
+            if (waterStateLabel) waterStateLabel.textContent = 'Cota Atenção';
+          } else if (riverLevel < 90) {
+            waterLiquidColumn.style.background = 'linear-gradient(180deg, #fb923c 0%, #ea580c 45%, #c2410c 100%)';
+            waterLiquidColumn.style.color = '#fb923c';
+            if (waterStateLabel) waterStateLabel.textContent = 'Cota Alerta';
+          } else {
+            waterLiquidColumn.style.background = 'linear-gradient(180deg, #f87171 0%, #dc2626 45%, #991b1b 100%)';
+            waterLiquidColumn.style.color = '#f87171';
+            if (waterStateLabel) {
+              waterStateLabel.textContent = riverLevel >= 100 ? 'TRANSBORDO!' : 'Evacuação';
+            }
+          }
+        }
+
+        if (waterFloatBadge) {
+          const clampedBadge = Math.min(88, Math.max(8, visualHeightPct));
+          waterFloatBadge.style.bottom = `${clampedBadge}%`;
+        }
+        if (waterFloatText) {
+          waterFloatText.textContent = `${meters}m`;
+        }
+
         riskBadge.className = `risk-pill ${risk.tier}`;
         riskBadgeText.textContent = risk.title;
         riskDescription.textContent = risk.desc;
@@ -1109,6 +1478,9 @@
         } else {
           evacuationBanner.style.display = 'none';
         }
+
+        // Atualização da disponibilidade da sirene (Somente em Evacuação Imediata >= 90%)
+        updateSirenAvailability();
 
         // Checar transições de vias para log
         VIAS.forEach(via => {
@@ -1273,7 +1645,7 @@
       }
 
       // =========================================================================
-      // 11. TRAVA 1: SLIDE TO UNLOCK
+      // 11. TRAVA 1: SLIDE TO UNLOCK & CONTROLE DE DISPONIBILIDADE POR STATUS
       // =========================================================================
       let isDragging = false;
       let startX = 0;
@@ -1286,7 +1658,60 @@
       window.addEventListener('resize', updateMaxDrag);
       updateMaxDrag();
 
+      function updateSirenAvailability() {
+        const sirenPanel = document.querySelector('.siren-panel');
+        const isEvacuacao = riverLevel >= 90;
+
+        if (!isEvacuacao) {
+          // Se o rio não está em evacuação imediata, desarma e bloqueia
+          if (isArmed || isSireneActive) {
+            disarmSystem();
+            addLog('SEGURANÇA: Gatilho da sirene desarmado e bloqueado (Status não é Evacuação Imediata).');
+          }
+
+          if (sirenPanel) sirenPanel.classList.remove('evacuation-ready');
+          slideTrack.classList.add('locked-disabled');
+          slideTrack.classList.remove('armed');
+          slideHandle.textContent = '🔒';
+          slideHandle.classList.remove('armed');
+          slideHandle.style.left = '4px';
+          slideText.textContent = '🔒 Bloqueado: Exige Evacuação Imediata (≥90%)';
+          slideText.style.color = 'var(--text-muted)';
+          
+          holdBtn.disabled = true;
+          holdBtn.classList.remove('ready');
+          holdLabel.textContent = 'Gatilho Bloqueado';
+          holdSublabel.textContent = 'Disponível apenas em Evacuação Imediata (≥90%)';
+          
+          sirenStatusText.textContent = 'BLOQUEADA (< 90%)';
+          sirenStatusText.style.color = 'var(--text-muted)';
+        } else {
+          // Status é Evacuação Imediata (>= 90%) -> Habilita o mecanismo de desarme/acionamento
+          if (sirenPanel) sirenPanel.classList.add('evacuation-ready');
+          slideTrack.classList.remove('locked-disabled');
+
+          if (!isArmed && !isSireneActive) {
+            slideText.textContent = 'Deslize para armar >>>';
+            slideText.style.color = '#ef4444';
+            slideHandle.textContent = '🔒';
+            slideHandle.classList.remove('armed');
+            
+            holdBtn.disabled = true;
+            holdBtn.classList.remove('ready');
+            holdLabel.textContent = 'Gatilho Travado';
+            holdSublabel.textContent = 'Complete o passo 1 para liberar';
+            
+            sirenStatusText.textContent = 'PRONTA PARA ARMAR';
+            sirenStatusText.style.color = '#f59e0b';
+          }
+        }
+      }
+
       function onDragStart(e) {
+        if (riverLevel < 90) {
+          addLog('SEGURANÇA: Acionamento bloqueado. O gatilho da sirene só pode ser armado no status de Evacuação Imediata (Nível ≥ 90%).', true);
+          return;
+        }
         if (isArmed) return;
         isDragging = true;
         startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
@@ -1295,7 +1720,7 @@
       }
 
       function onDragMove(e) {
-        if (!isDragging || isArmed) return;
+        if (!isDragging || isArmed || riverLevel < 90) return;
         const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
         const delta = clientX - startX;
         currentX = Math.max(0, Math.min(delta, maxDrag));
@@ -1315,6 +1740,10 @@
       }
 
       function armSystem() {
+        if (riverLevel < 90) {
+          disarmSystem();
+          return;
+        }
         isDragging = false;
         isArmed = true;
         slideHandle.style.left = `${maxDrag + 4}px`;
@@ -1346,22 +1775,18 @@
         slideHandle.classList.remove('armed');
         slideHandle.textContent = '🔒';
         slideTrack.classList.remove('armed');
-        slideText.textContent = 'Deslize para armar >>>';
-        slideText.style.color = 'var(--text-muted)';
 
         holdBtn.disabled = true;
         holdBtn.classList.remove('ready');
         holdBar.style.width = '0%';
-        holdLabel.textContent = 'Gatilho Travado';
-        holdSublabel.textContent = 'Complete o passo 1 para liberar';
 
-        sirenStatusText.textContent = 'TRAVADA';
-        sirenStatusText.style.color = 'var(--text-muted)';
         btnSilence.classList.remove('active');
 
         if (riverLevel < 90) {
           evacuationBanner.style.display = 'none';
         }
+
+        updateSirenAvailability();
       }
 
       slideHandle.addEventListener('mousedown', onDragStart);
